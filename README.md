@@ -1,4 +1,4 @@
-The-RAHD-Team
+The RAHD Team
 =============
 
 Research on automatic theorem proving methods for 
@@ -8,14 +8,14 @@ Epsilon-baked, raw, unpolished ideas and code are
 encouraged! 
 
 
-Who-Are-We?
+Who Are We?
 ===========
 
 The RAHD Team
 
  is based at the University of Edinburgh.
  
-Current-Members
+Current Members
 ---------------
 
 1. (Research) Faculty
