@@ -11,9 +11,7 @@ encouraged!
 Who Are We?
 ===========
 
-The RAHD Team
-
- is based at the University of Edinburgh.
+The RAHD Team is (mostly) based at the University of Edinburgh.
  
 Current Members
 ---------------
