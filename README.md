@@ -13,9 +13,11 @@ Who-Are-We?
 
 The RAHD Team
 
- is based at the University of Edinburgh
+ is based at the University of Edinburgh.
  
- 
+Current-Members
+---------------
+
 1. (Research) Faculty
    * Paul B. Jackson
    * Grant Olney Passmore
