@@ -13,12 +13,18 @@ Who-Are-We?
 
 The RAHD Team
 
- is
+ is based at the University of Edinburgh
  
- Paul B. Jackson,
- Kristjan Liiva, and
- Grant Olney Passmore.
+  and is currently
  
+ [(Research) Faculty]
+  Paul B. Jackson
+  Grant Olney Passmore
+
+ [PhD Students]
+  Kristjan Liiva
+  Andrew Sogokon
+
 
 Contact
 =======
