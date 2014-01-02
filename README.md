@@ -16,9 +16,9 @@ The RAHD Team is (mostly) based at the University of Edinburgh.
 Current Members
 ---------------
 
-1. (Research) Faculty
-   * Paul B. Jackson
-   * Grant Olney Passmore
+1. Staff
+   * Paul B. Jackson - http://homepages.inf.ed.ac.uk/pbj/
+   * Grant Olney Passmore - http://www.cl.cam.ac.uk/~gp351/
 
 2. PhD Students
    * Kristjan Liiva
