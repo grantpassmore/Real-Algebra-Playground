@@ -1,5 +1,5 @@
-The RAHD Team
-=============
+The Real Algebra Playground
+===========================
 
 Research on automatic theorem proving methods for 
 nonlinear arithmetics and high-dimensional spaces.
@@ -11,7 +11,7 @@ encouraged!
 Who Are We?
 ===========
 
-The RAHD Team is (mostly) based at the University of Edinburgh.
+The team is (mostly) based at the University of Edinburgh.
  
 Current Members
 ---------------
