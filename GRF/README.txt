@@ -8,6 +8,9 @@
 
      > load('grf.sage')
      > load('smt2.py')
+     
+3) Given a GRF problem file 'my_input_file.smt', execute the command:     
+     
      > grf_on_file('my_input_file.smt', 
                     outfile='foo.out', 
                     k=25, 
@@ -23,8 +26,8 @@
 
      > grf_on_file('./Examples/HidingProblems/DWA_StationaryObstacles_ArcTraj_onlyleaves_nodivision_lessstupid.key_10.smt', interactive=True)
 
-3) For experimenting with sampling techniques, search in grf.sage for the phrase `Note for Erik'.
+4) For experimenting with sampling techniques, search in grf.sage for the phrase `Note for Erik'.
 
-4) Please let me know if you have any trouble!
+5) Please let me know if you have any trouble!
 
--G. Passmore - 15/Dec/2013
+-G. Passmore
