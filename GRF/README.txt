@@ -8,7 +8,11 @@
 
      > load('grf.sage')
      > load('smt2.py')
-     > grf_on_file('my_input_file.smt', outfile='foo.out', k=25, epsilon=0.1, interactive=False)
+     > grf_on_file('my_input_file.smt', 
+                    outfile='foo.out', 
+                    k=25, 
+                    epsilon=0.1, 
+                    interactive=False)
 
        * Note that all keyword parameters to grf_on_file are optional.
 
