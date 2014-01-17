@@ -11,8 +11,6 @@ encouraged!
 Who Are We?
 ===========
 
-The team is (mostly) based at the University of Edinburgh.
- 
 Current Members
 ---------------
 
