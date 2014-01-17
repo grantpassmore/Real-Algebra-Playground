@@ -1,5 +1,5 @@
-The Real Algebraic Geometry Playground
-======================================
+The Real Algebra Playground
+===========================
 
 Research on automatic theorem proving methods for 
 nonlinear arithmetics and high-dimensional spaces.
