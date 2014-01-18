@@ -1,10 +1,11 @@
 Geometric Relevance Filtering for RCF
 =====================================
 
-Requires 
---------
+Requirements 
+------------
 
 Sage (sagemath.org)
+
 
 How to Run
 ----------
@@ -38,6 +39,7 @@ How to Run
 4) For experimenting with sampling techniques, search in grf.sage for the phrase `Note for Erik'.
 
 5) Please let me know if you have any trouble!
+
 
 Contact
 -------
