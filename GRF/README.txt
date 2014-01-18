@@ -1,4 +1,15 @@
---{New setup notes, only depending on Sage}--
+Geometric Relevance Filtering for RCF
+=====================================
+
+Contact: G.O.Passmore (grant.passmore@cl.cam.ac.uk)
+
+Requires 
+========
+
+Sage (sagemath.org)
+
+How to Run
+==========
 
 1) Run the Sage command line shell.
 
@@ -29,5 +40,3 @@
 4) For experimenting with sampling techniques, search in grf.sage for the phrase `Note for Erik'.
 
 5) Please let me know if you have any trouble!
-
--G. Passmore
