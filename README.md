@@ -11,9 +11,6 @@ encouraged!
 Who Are We?
 ===========
 
-Current Members
----------------
-
 1. Staff
    * Paul B. Jackson - http://homepages.inf.ed.ac.uk/pbj/
    * Grant Olney Passmore - http://www.cl.cam.ac.uk/~gp351/
