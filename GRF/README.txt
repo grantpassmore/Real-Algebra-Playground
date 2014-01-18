@@ -20,10 +20,10 @@ How to Run
      
 3) Given a GRF problem file 'my_input_file.smt', execute the command:     
      
-     > grf_on_file('my_input_file.smt', 
-                    outfile='foo.out', 
-                    k=25, 
-                    epsilon=0.1, 
+     > grf_on_file('my_input_file.smt', \
+                    outfile='foo.out', \
+                    k=25, \
+                    epsilon=0.1, \
                     interactive=False)
 
        * Note that all keyword parameters to grf_on_file are optional.
