@@ -478,7 +478,7 @@ def grf_on_file(filename=None, k=25, epsilon=0.1, interactive=True, outfile=None
 
     print "\n-- GRF run complete.\n\n"
 
-    return (len(hide_ant), len(hide_suc))
+
 
 #
 # Tests
