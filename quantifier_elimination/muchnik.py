@@ -681,8 +681,6 @@ class Muchniker:
         self.pprint_diagram(diagram)
       sys.stdout.write("\r------ %f" %(progress * 100 / len(diagrams)))
       sys.stdout.flush()
-      if len(ext_diagrams) > 40:
-        break
     print
 
     # determines whether diagrams satisfy the conditions

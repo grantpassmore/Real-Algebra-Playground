@@ -1,9 +1,11 @@
 import sympy as s
 import sympy.abc
-import muchnik as m
+import cohenhorm as ch
+import muchnik as mu
 import sympywrapper as sw
+import cachedsympywrapper as cw
 
 #x = s.var('x')
 x, y, z = sympy.abc.x, sympy.abc.y, sympy.abc.z
 
-mer = m.Muchniker(sw.SympyWrapper(x))
+#cer = ch.CohenHormander(sw.SympyWrapper(x))

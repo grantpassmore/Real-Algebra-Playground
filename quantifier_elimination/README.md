@@ -39,7 +39,7 @@ Complex:
   ([y - 1], [-y, -y + 1])
 ]
 </pre>
-Corresponds to a clause:
+Corresponds to a formula in DNF:
 <pre>
 -y == 0 /\ -y + 1 == 0 /\ y - 1 == 0 \/ 
 -y == 0 /\ -y + 1  != 0 /\ y - 1 == 0 \/ 
@@ -60,7 +60,7 @@ Reals:
 ([], [], [-y, -y + 1, y - 1])]
 </pre>
 
-Corresponds to a clause: 
+Corresponds to a formula in DNF: 
 <pre>
 -y < 0 /\ -y + 1 < 0 /\ y - 1 > 0 \/
 -y < 0 /\ -y + 1 = 0 /\ y - 1 > 0 \/
@@ -69,6 +69,10 @@ Corresponds to a clause:
 -y > 0 /\ -y + 1 > 0 /\ y - 1 > 0
 
 </pre>
+
+Source
+---------
+[Ch 2.1, 2.2](http://www.cl.cam.ac.uk/~gp351/passmore-phd-thesis.pdf)
 
 sympywrapper.py
 =============
