@@ -20,7 +20,7 @@
 #   - SMTLib 2.0 parser for input problems...DONE!,
 #   - Sort candidate hypotheses by degree/weight/#vars/etc
 #      (look at p 264 in Andre's book),
-#   - Look into not requiring all variables to be in the initial goal...DONE!,
+#   - Look into not requiring all variables to be in the initial goal. ..DONE!,
 #   - Understand where/when B-M projection with normal lifting is sufficient,
 #   - Full (Hong-Collins) projection operator,
 #   - Quantifiers?
@@ -41,6 +41,41 @@ import random
 import pipes
 import tempfile
 import sys
+
+import numpy as np
+import scipy.optimize as sp_opt
+import warnings
+warnings.filterwarnings('ignore', 'The iteration is not making good progress')
+
+
+"""
+ EPZ's Helper functions
+"""
+
+# The sorely needed sign function
+def sign(x):
+    if x == 0:
+        return 0
+    return math.copysign(1,x)
+
+# Soft "zero" sampling routine
+# EPZ
+def softzero_sample(F):
+    expF = [math.exp(-abs(f)) for f in F]
+    Z = sum(expF)
+    P = [p / Z for p in expF]
+    print "Softmin dist:", P
+    r = random.random()
+    for i in xrange(len(F)):
+        if r > P[i]:
+            r = r - P[i]
+        else:
+            return i
+    return max(0,len(F)-1)
+
+"""
+ Regularly scheduled programming
+"""
 
 class RCF:
     pass
@@ -782,6 +817,174 @@ class RCF_GD_Decide(RCF):
         self.witness = None
         self.status = None
 
+    # Generic entry point for sampling
+    # EPZ
+    def sample_points(self,dict,sampling_params = None):
+        return self.local_search_sampling(dict, sampling_params);
+        #return self.k_sample_points_in_ball(dict,25,0.05)
+
+    # Atom & poly getters
+    def get_hidden_atoms(self):
+        return self.hyps
+
+    def get_hidden_polys(self):
+        return [h.poly for h in self.hyps]
+
+    def get_all_hyp_atoms(self):
+        return self.hyps + self.goal.goal_hyps
+
+
+    
+    # Local search: sample a uniform polynomial and root find it, keep the point and move on
+    # EPZ
+    def local_search_sampling(self,D,sample_params): 
+        N = self.num_vars
+
+        # Search parameters; TODO: should put into a structure
+        repeat_num = 10;
+        chain_length = 2;
+        init_perturb_num = 25;
+        perturb_num = 25;
+        perturb_eps = 0.01 # for ball sampling around points
+        ineq_eps = 1e-6 # for flipping inequalities
+ 
+        # Helpers for converting between dict and vector reps
+        # Might want to make external functions
+        var_order = D.keys() # Fix an order
+        assert(len(var_order) == N) # Full dim
+        def dict2vect(D):
+            return [D[i] for i in var_order]
+        def vect2dict(v):
+            assert(len(v) == N) # Full dim
+            new_D = {}
+            for i in range(N):
+                key = var_order[i]
+                new_D[key] = v[i]
+            return new_D
+        def eval_poly(P,x):
+            d = vect2dict(x)
+            return P.substitute(d)
+        def perturb(x):
+            return [x[i] + random.uniform(-perturb_eps, perturb_eps) \
+                        for i in xrange(N)]
+        def perturb_dict(D):
+            new_D = {}
+            for k in D.iterkeys():
+                new_D[k] = D[k] + random.uniform(-perturb_eps, perturb_eps)
+            return new_D
+                
+
+
+    # Evaluate point D on atom list A
+        def truth_sig(D):
+            A = self.get_all_hyp_atoms()
+            return tuple([a.eval_on_dict(D) for a in A])
+
+        # Select a hypothesis based on the "soft-zero" of their values
+        def choose_atom_softzero(x):
+            D = vect2dict(x)
+            Atoms = self.get_all_hyp_atoms()
+            A_values = [a.poly.substitute(D) for a in Atoms]
+            s = softzero_sample(A_values)
+            return Atoms[s]
+        
+        def choose_atom_random(x):
+            Atoms = self.get_hidden_atoms()
+            return random.choice(Atoms)
+
+        # Flip a hidden hypothesis that happens to be true on the cell
+        def choose_atom_true(x):
+            D = vect2dict(x)
+            Atoms = self.get_hidden_atoms() # Just the hidden hypotheses
+            NeedFlip = filter(lambda x: x.eval_on_dict(D), Atoms) 
+            # hypothesis that happen to be true on the set
+            if len(NeedFlip) == 0:
+                return None
+            A = random.choice(NeedFlip)
+            return A
+
+        # Sets the function so root finding falsifies the atom
+        def get_falsifying_func(A):
+            flip_eps = 0
+            if (A.op in ["<", "<="]):
+                # Solve for P(x) - e = 0, so P(x) > 0
+                flip_eps = -ineq_eps
+            elif (A.op in [">", ">="]):
+                # Solve for P(x) + e = 0, so P(x) < 0
+                flip_eps = ineq_eps
+            else:
+                #Random flip
+                flip_eps = ineq_eps*random.choice([-1,0,1])
+            # NB: stupid padding so it is an N*N system
+            return lambda x: [eval_poly(A.poly,x) + flip_eps] + [0]*(N-1) 
+            
+        # Sets the function so root finding flips the sign of the polynomial
+        def get_flipping_func(A):
+            p_val = eval_poly(A.poly,x)
+            flip_eps = 0
+            if p_val != 0:
+                # If P(x) > 0, then solving for P(x') + e = 0 
+                #   implies that P(x) < 0
+                # Else P(x) < 0, so solving for P(x') - e = 0 
+                #   implies that P(x) > 0
+                flip_eps = math.copysign(ineq_eps,p_val)
+            else:
+                flip_eps = ineq_eps*random.choice([-1,1])
+            # NB: stupid padding so it is an N*N system
+            return lambda x: [eval_poly(A.poly,x) + flip_eps] + [0]*(N-1) 
+
+        ###
+        # This is where the actual points are sampled
+        ###
+
+        Points = [D] \
+            + [perturb_dict(D) for i in xrange(init_perturb_num)]   
+
+        for i in xrange(repeat_num):
+            x = dict2vect(D)
+            for k in xrange(chain_length):
+                A = None
+                
+                # Figure out if the goal is true at this point
+                #D = vect2dict(x)
+                #g_val = self.goal.main_goal.eval_on_dict(D)
+                #if g_val:
+                #    A = self.goal.main_goal # Falsify the goal
+                #else:
+                #    A = choose_atom_true(x) # Pick a random true hypothesis
+
+                # Didn't pick something? Just flip a hypothesis
+                if A == None:
+                    A = choose_atom_random(x)
+
+                # Sets up a function so that root solving it flips
+                # the choosen polynomial
+                f = get_flipping_func(A)
+
+                # Numerical root solving
+                x = sp_opt.fsolve(f,x,xtol=1e-3)
+
+                # Add this point plus some perturbed neighbours
+                points =  [vect2dict(x)]\
+                    + [vect2dict(perturb(x)) for i in xrange(perturb_num)]
+
+                # Filter out points that make the main goal True (useless)
+                good_on_goal = lambda y: not self.goal.main_goal.eval_on_dict(y)
+                points = filter(good_on_goal, points)
+                Points.extend(points)
+
+        filtered_points = []
+        SigSet = set()
+        for D in Points:
+            #sig = truth_sig(D)
+            #if sig in SigSet:
+            #    continue
+            #SigSet.update(sig)
+            filtered_points.append(D)
+        print "Size of signature set: ", len(SigSet)
+        return filtered_points
+            
+
    #
    # Note for Erik: k_sample_points_in_ball() is the main function
    # for uniform ball sampling. This is a good place to start for
@@ -798,8 +1001,10 @@ class RCF_GD_Decide(RCF):
             new_d = {}
             for v in dict.iterkeys():
                 new_d[v] = dict[v] + random.uniform(-epsilon, epsilon)
+                #sys.stderr.write("Old: {0}, New: {1}\n".format(dict[v], new_d[v]))
             return new_d
-        random.seed()
+        #random.seed()
+        #sys.stderr.write("Using [{0},{1}]\n".format(k,epsilon))
         return [perturbe_dict() for i in range(k)]
 
     def promote_right(self, i):
@@ -818,7 +1023,8 @@ class RCF_GD_Decide(RCF):
             print (" - Goal sequent false on " + str(dict) + ".")
             print (" - Computing " + str(k) + " additional sample points \
 in a (uniform) epsilon(=" + str(epsilon) + ") neighborhood.")
-            all_pts = [dict] + self.k_sample_points_in_ball(dict, k, epsilon)
+            #all_pts = [dict] + self.k_sample_points_in_ball(dict, k, epsilon)
+            all_pts = [dict] + self.sample_points(dict);
             #print " - New list of dictionaries for all sample points:"
             #print str(all_pts)
             sys.stdout.write(" - Evaluating hypotheses over sample points..."),

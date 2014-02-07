@@ -21,7 +21,7 @@ from matplotlib.pyparsing_py2 import Literal, Keyword, Word, OneOrMore, ZeroOrMo
     MatchFirst, oneOf, GoToColumn, ParseResults, StringEnd, FollowedBy, \
     ParserElement, QuotedString
 
-# ! Make sure that grf.sage is loaded in Sage before this file !
+# ! Make sure that grf.py is loaded in Sage before this file !
 
 #
 # With pyparsing, the default sys recursion limit must be increased for
@@ -478,7 +478,7 @@ def grf_on_file(filename=None, k=25, epsilon=0.1, interactive=True, outfile=None
 
     print "\n-- GRF run complete.\n\n"
 
-
+    return (len(hide_ant), len(hide_suc))
 
 #
 # Tests

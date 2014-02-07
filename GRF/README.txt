@@ -1,13 +1,4 @@
-Geometric Relevance Filtering for RCF
-=====================================
-
-Requirements 
-------------
-
-Sage (sagemath.org)
-
-How to Run
-----------
+--{New setup notes, only depending on Sage}--
 
 1) Run the Sage command line shell.
 
@@ -17,14 +8,7 @@ How to Run
 
      > load('grf.sage')
      > load('smt2.py')
-     
-3) Given a GRF problem file 'my_input_file.smt', execute the command:     
-     
-     > grf_on_file('my_input_file.smt', \
-                    outfile='foo.out', \
-                    k=25, \
-                    epsilon=0.1, \
-                    interactive=False)
+     > grf_on_file('my_input_file.smt', outfile='foo.out', k=25, epsilon=0.1, interactive=False)
 
        * Note that all keyword parameters to grf_on_file are optional.
 
@@ -35,10 +19,8 @@ How to Run
 
      > grf_on_file('./Examples/HidingProblems/DWA_StationaryObstacles_ArcTraj_onlyleaves_nodivision_lessstupid.key_10.smt', interactive=True)
 
-4) For experimenting with sampling techniques, search in grf.sage for the phrase `Note for Erik'.
+3) For experimenting with sampling techniques, search in grf.sage for the phrase `Note for Erik'.
 
-5) Please let me know if you have any trouble!
+4) Please let me know if you have any trouble!
 
-Contact
--------
-Grant Olney Passmore - grant.passmore@cl.cam.ac.uk
+-G. Passmore - 15/Dec/2013
