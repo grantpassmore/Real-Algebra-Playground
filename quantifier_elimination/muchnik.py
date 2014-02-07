@@ -115,12 +115,14 @@ class Muchniker:
     sys.stdout.write("\r# of diagrams: %d" %(len(diagrams)*2))
     sys.stdout.flush()
 
+    #next polynomial (that has variables) that is assigned a value
     c = var_frag[0]
     rest = var_frag[1:]
     acc = []
     #ordered by binary values
     for diagram in diagrams:
-      self._diagram_copy(diagram)
+      # make two copies, assign polynomial to zero in one of them
+      # and not zero in another one
       d1 = self._diagram_copy(diagram)
       d2 = self._diagram_copy(diagram)
       d1[c][0] = (0, c)
@@ -216,6 +218,8 @@ class Muchniker:
     polies_done -- polynomials that have already been processed
     polies_todo -- polynomials that have not been processed yet
     """
+    
+    # just some progress output
     if(len(polies_done) % 2 == 0):
 #      print "(%d, %d)" %(len(polies_done),len(polies_todo))
        sys.stdout.write("\r(polies done, polies to inspect): (%d, %d)" 
@@ -294,6 +298,7 @@ class Muchniker:
     diagram[p][0] = (1, p)
   
     # if leading coefficient is zero then copy tail
+    # lc * fac(degree) is in muchnik sequence
     lc_row = self._algebra.LC(p) * fac(self._algebra.degree(p))
     if(diagram[lc_row][0][0] == 0):
       tail = self._algebra.p_tail(p)
@@ -329,6 +334,8 @@ class Muchniker:
         running_der = p
         
         # counts the multiplicity of the root
+        # multiplicity can be determined by if the 1st, 2nd ...
+        # derivative is zero
         for dp in range(self._algebra.degree(p)):
           running_der = self._algebra.derivative(running_der)
           if diagram[running_der][col][0] != 0:
@@ -339,7 +346,7 @@ class Muchniker:
       diagram[p][col] = (value, p)
     
   
-    # add new roots (thier multiplicity is always 1)
+    # add new roots (their multiplicity is always 1)
     for i in range(self._algebra.degree(p) - roots_done):
       column = colSize + i
       #iterate over other polynomials
@@ -395,6 +402,7 @@ class Muchniker:
     """
     ps = equalities + inequalities
     
+    # get the muchnik sequence for all polynomials
     muchnik_seq = self.muchnik_sequence(
       sortedset([self._algebra.zero()], key = self._poly_deg_key), ps)
       
@@ -435,19 +443,19 @@ class Muchniker:
     for diagram in diagrams:
       extended = self.complex_extend(diagram, nonconst_frag)
       ext_diagrams.append(extended)
-      #self.pprint_diagram(extended)
+      # progress printing
       progress = progress + 1
       sys.stdout.write("\rroot diagrams extended: %.2f%%" %
         (progress * 100 / len(diagrams)))
       sys.stdout.flush()
-#      if len(ext_diagrams) > 10:
-#        break
     print ""
 
     # determines whether diagrams satisfy the conditions
     good_diagrams = []
     for diagram in ext_diagrams:
+      # all columns can potentially satisfy the conditions
       candidate_cols = diagram[self._algebra.zero()].keys()
+      
       for equality_poly in equalities:
         still_good = []
         for col in candidate_cols:
@@ -507,13 +515,14 @@ class Muchniker:
     if len(nonconst_frag) == 0:
       return diagram
   
-    #polynomial under watch
+    # polynomial under watch
     p = nonconst_frag[0]
     deg_p = self._algebra.degree(p)
     todo = nonconst_frag[1:]
+    # all the polynomials in the diagram
     rest_polies = set(diagram.keys())
   
-    #if leading coefficient is zero then copy tail
+    # if leading coefficient is zero then copy tail and return
     lc_row = self._algebra.LC(p) * fac(self._algebra.degree(p))
     if(diagram[lc_row][0][0] == 0):
       tail = self._algebra.p_tail(p)
@@ -521,77 +530,100 @@ class Muchniker:
         diagram[p][col] = (diagram[tail][col][0], p)
       return self.real_extend(diagram, todo)
   
-    #end values
+    # polynomial value at infinity points
     diagram[p][0] = (diagram[lc_row][0][0] * (-1)**deg_p, p)
     diagram[p][1.0] = (diagram[lc_row][1.0][0], p)
   
+    # just all the columns in the diagram (zero is always in diagram)
+    # sorted because then it is possible to index them
     zero_cols = sortedset(diagram[self._algebra.zero()].keys())
+    # columns and their index at the table
     zipped_cols = zip(zero_cols, range(len(zero_cols)))
   
+    # determine the value of p at roots of the polynomials in
+    # the diagram (skip infinity columns since there are no roots
+    # there)
     for col_ind in zipped_cols[1:-1]:
+      # set of polynomials that have a root in the current column
       zeros = sortedset(key = self._poly_deg_key)
       col = col_ind[0]
       ind = col_ind[1]
-      #find the minimal degree polynomial
+      # consider all polynomials in the diagram
       for q in rest_polies:
-        #only interested in non zero polies
+        #only interested in non zero polies that have roots
         if((diagram[q][col][0] == 0) & (diagram[q][0][0] != 0)):
           zeros.add(q)
       if len(zeros) != 0:
+        # calculate the pseudo remainder with respect to lowest
+        # polynomial (zeros[0])
         quot, rem = self._algebra.pseudo_div(p, zeros[0])
-        #poly can be multiplied by a negative coef 
-        #(resulting in a changed sign)
-        #assumes this is always max power
-
+        
+        # poly can be multiplied by a negative coef (resulting in a
+        # flipped sign)
         ps_coef = self._algebra.LC(zeros[0]) * \
           fac(self._algebra.degree(zeros[0]))
         ps_neg = diagram[ps_coef][col][0] < 0
         ps_deg = self._algebra.degree(p) - self._algebra.degree(zeros[0]) + 1
         ps_odd_deg = ps_deg % 2 == 1
 
-        
         value = diagram[rem][col][0]
-#        print "v: %s" %value
-#        print "psc: %s" %ps_coef
-#        print "ps_deg: %s" %ps_deg
-#        print "odd: %s" %ps_odd_deg
-#        print "neg: %s" %ps_neg
 
-        # IMPORTANT! change the value if coef was negative
+        # IMPORTANT! change the value if coef was negative degree is odd
         if ps_neg & ps_odd_deg:
           value = -value 
-#        print "v: %s" %value
+        
+        # set the value of p to the value of remainder
         diagram[p][col] = (value, p)
+        
+    # determine the valu of p in the columns that are not roots of some
+    # other polynomials in the diagram (can skip infinity columns again)
     for col_ind in zipped_cols[1:-1]:
+      # set of all polynomials that have a root in current column
       zeros = sortedset(key = self._poly_deg_key)
       col = col_ind[0]
       ind = col_ind[1]
-      #find the minimal degree polynomial
+      # populate with polynomials that have zero
       for q in rest_polies:
-        #only interested in non zero polies
+        # only interested in non zero polies
         if((diagram[q][col][0] == 0) & (diagram[q][0][0] != 0)):
           zeros.add(q)
-      if len(zeros) == 0:
-        left_col = zipped_cols[ind-1][0]
-        right_col = zipped_cols[ind+1][0]
-        left_val = diagram[p][left_col][0]
-        right_val = diagram[p][right_col][0]
-        if (left_val,right_val) == (0, 0):
-          raise DiagramExc("bad diagram, doesn't have derivative's root")
-        else: #both are not zeros
-          #equal and not zeros, or one of them is zero (both can't be)
-          if (left_val == right_val) | (left_val * right_val == 0):
-            value = self._algebra.sign(left_val + right_val)
-            diagram[p][col] = (value, p)
-          else: #opposite nonzero signs
-            left_new_col = (col + left_col) / 2
-            right_new_col = (col + right_col) / 2
-            diagram[p][left_new_col] = (left_val, p)
-            diagram[p][col] = (0, p)
-            diagram[p][right_new_col] = (right_val, p)
-            for q in rest_polies:
-              diagram[q][left_new_col] = diagram[q][col]
-              diagram[q][right_new_col] = diagram[q][col]
+      # if column has any roots then skip
+      if len(zeros) != 0:
+        continue
+        
+      left_col = zipped_cols[ind-1][0]
+      right_col = zipped_cols[ind+1][0]
+      # previous value
+      left_val = diagram[p][left_col][0]
+      # next value
+      right_val = diagram[p][right_col][0]
+      
+      if (left_val,right_val) == (0, 0):
+        raise DiagramExc("bad diagram, doesn't have derivative's root")
+      # by this point previous and next value are not both zeros
+      
+      # cases (0, +-1), (+-1, 0), (1, 1), (-1, -1)
+      if (left_val == right_val) | (left_val * right_val == 0):
+        # there in no root in the interval
+        # copies what ever non zero sign is in the neighbouring column
+        value = self._algebra.sign(left_val + right_val)
+        diagram[p][col] = (value, p)
+        continue
+        
+      # reached only if neighbouring columns are (-1, 1) or (1, -1)
+      # therefore there is a root and two new columns need to be created
+      left_new_col = (col + left_col) / 2
+      right_new_col = (col + right_col) / 2
+      # copy left value to new column on the left
+      diagram[p][left_new_col] = (left_val, p)
+      # column corresponding to root
+      diagram[p][col] = (0, p)
+      # copy right value to new column on the right
+      diagram[p][right_new_col] = (right_val, p)
+      # set other polynomials in the two new created oclumns
+      for q in rest_polies:
+        diagram[q][left_new_col] = diagram[q][col]
+        diagram[q][right_new_col] = diagram[q][col]
     return self.real_extend(diagram, todo)
 
   def real_partial(self, ps, assigner = r_assignment_interactive):
@@ -600,7 +632,7 @@ class Muchniker:
     Keyword arguments:
     ps -- input polynomials
     assigner -- assigner which determines to which terms are assigned.
-                Either r_assignment_all_pos, c_assigment_all_zero, 
+                Either r_assignment_all_pos, r_assigment_all_zero, 
                 r_assignment_all_neg or r_assigment_interactive
     """
     muchnik_seq = self.muchnik_sequence(
@@ -642,28 +674,37 @@ class Muchniker:
     """
 
     ps = lesser + equalities + greater
+    
+    # muchnik sequence of all the input polynomials
     muchnik_seq = self.muchnik_sequence(
       sortedset([self._algebra.zero()], key = self._poly_deg_key), 
       ps
     )
     
+    # constant fragment (with respect to the variable to be eliminated)
     constant_frag = filter(
       lambda p: self._algebra.div(p, self._algebra.e_var())[0] == 0, 
       muchnik_seq
     )
+    
+    # nonconstant fragment (with respect to the variable to be eliminated)
     nonconst_frag = filter(
       lambda p: self._algebra.div(p, self._algebra.e_var())[0] != 0, 
       muchnik_seq
     )
-
+    
+    # part of the constant fragment that has variables
     var_frag = filter(lambda p: self._algebra.has_variable(p), constant_frag)
+    # part of the constant fragment that has no variables
     sca_frag = filter(
       lambda p: not(self._algebra.has_variable(p)), constant_frag
     )
 
+    # assignment type doesn't matter since nothing is assigned here
     root_diagram = self.r_assignment_all_zero(sca_frag)
-#    self.pprint_diagram(root_diagram)
     
+    # assigns all the polynomials that have variables to all possible
+    # values
     diagrams = self._r_full_assignment([root_diagram], var_frag)
 
     # extends all diagrams
@@ -676,9 +717,10 @@ class Muchniker:
         extended = self.real_extend(diagram, nonconst_frag)
         ext_diagrams.append(extended)
       except DiagramExc as ex:
-#      except Exception as ex:
+        # skip the diagram if it became invalid due to assignment
         print "==========\nBAD DIAGRAM\n%s\n==========" %ex
         self.pprint_diagram(diagram)
+      # progress printing
       sys.stdout.write("\r------ %f" %(progress * 100 / len(diagrams)))
       sys.stdout.flush()
     print
@@ -687,8 +729,6 @@ class Muchniker:
     good_diagrams = []
     for diagram in ext_diagrams:
       candidate_cols = diagram[self._algebra.zero()].keys()
-      # self.pprint_diagram(diagram)
-      # print sortedset(candidate_cols)
       for equality_poly in equalities:
         still_good = []
         for col in candidate_cols:

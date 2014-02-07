@@ -28,12 +28,15 @@ class CohenHormander:
     contexted_tables = self._real_table(polys, {})
     print
     
+    # determine which whether diagrams satisify input conditions
     conditions = [(lesser, -1), (equalities, 0), (greater, 1)]
     good_tables = []
     for table, c in contexted_tables:
+      # all columns are possible good
       candidate_cols = table[table.keys()[0]].keys()
       
       for (polies, cond) in conditions:
+        # filter out columns that are invalid
         for poly in polies:
           still_good = []
           for col in candidate_cols:
@@ -47,6 +50,7 @@ class CohenHormander:
         good_tables.append((table, c))
     print "\n\nSUITABLE TABLES:\n"
     
+    # construct the return value
     ret = []
     for table, c in good_tables:
       print "context: %s" %c
@@ -71,6 +75,8 @@ class CohenHormander:
     """
     if len(polys) == 0:
       return {}
+      
+    # sort polynomials by their degrees  
     set = sortedset(polys, key = lambda p: - self._algebra.degree(p))
     # pick the next polynomial (which is of maximum degree)
     max_poly = set.pop(0)
