@@ -1,4 +1,4 @@
-Muchnik.py
+muchnik.py
 ========
 Quantifier elimination for real and complex numbers
 
@@ -72,7 +72,41 @@ Corresponds to a formula in DNF:
 
 Source
 ---------
-[Ch 2.1, 2.2](http://www.cl.cam.ac.uk/~gp351/passmore-phd-thesis.pdf)
+Ch 2.1, 2.2 from [Combined Decision Procedures for Nonlinear Arithmetics, Real and Complex](http://www.cl.cam.ac.uk/~gp351/passmore-phd-thesis.pdf)
+
+cohenhorm.py
+========
+Quantifier elimination for reals
+
+Requirements:
+
+* [blist](https://pypi.python.org/pypi/blist/)
+
+Usage
+---------
+Construct a CohenHormander object (from algebra such `SympyWrapper`):
+
+    cohenhormander = cohenhorm.CohenHormander(algebra)
+
+* Eliminate existential quantifier for real numbers where `lesser` is a list of polynomials that must be less than zero, `equalities` is a list of equalities and `greater` is a list of polynomials that must be greater than zero:
+
+        cohenhormander.real_full(lesser, equalities, greater)
+
+`real_full` also print suitable diagrams and assignments.
+
+Examples:
+---------------
+
+    cohenhormander.real_full([x-y], [x-1], [])
+
+Returns:
+------------
+
+Same as muchnik
+
+Source
+---------
+Follows theory part of [Real quantiﬁer elimination](http://gc83.perso.sfr.fr/M2/harrison-real.pdf)
 
 sympywrapper.py
 =============
