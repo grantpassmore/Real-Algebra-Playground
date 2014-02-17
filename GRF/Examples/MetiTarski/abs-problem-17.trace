@@ -1,0 +1,140 @@
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[skoXC1*(-6+skoXC1)<=-12,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))<=-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[(skoXC1 (-6+skoXC1))<=-12]/\[[(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))<=-12]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (<= (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[-1<=skoXC1,skoXC1*skoXC1*(6+skoXC1*(-1+skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[-1<=skoXC1]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1+(skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (<= (- 1.) skoXC1) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.))))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (- 1.) skoXC1) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[-1<=skoXC1,skoXC1*skoXC1*(6+skoXC1*(-1+skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))<=0,skoXC1*(-6+skoXC1)<=-12,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[-1<=skoXC1]/\[[(skoXC1 skoXC1 (6+(skoXC1 (-1+(skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))<=0]/\[[(skoXC1 (-6+skoXC1))<=-12]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (<= (- 1.) skoXC1) (and (<= (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (and (<= (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.))))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (- 1.) skoXC1) (<= (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (<= (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[skoXC1*skoXC1*(6+skoXC1*(-1+skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))<=0,-1>skoXC1,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[(skoXC1 skoXC1 (6+(skoXC1 (-1+(skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))<=0]/\[[skoXC1<-1]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (<= (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (and (> (- 1.) skoXC1) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (> (- 1.) skoXC1) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[-1<=skoXC1,skoXC1*(6+skoXC1*-1)<=12,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[-1<=skoXC1]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (<= (- 1.) skoXC1) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (- 1.) skoXC1) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[skoXC1*(6+skoXC1*-1)<=12,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[skoXC1*skoXC1*(6+skoXC1*(-1+skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>0,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[0<(skoXC1 skoXC1 (6+(skoXC1 (-1+(skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[skoXC1*(60+skoXC1*(-12+skoXC1))<=120,skoXC1*skoXC1*(6+skoXC1*(-1+skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>0,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1+(skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*(-1+skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>0,skoXC1*(6+skoXC1*(1+skoXC1*skoXC1*skoXC1*((1/60)+skoXC1*(-1/60))))>-12,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*(1/60)<=0,skoXC1*(-6+skoXC1)>-12,skoXC1*(6+skoXC1)>-12,skoXC1*(6+skoXC1*-1)<=12,skoXC1*skoXC1*(6+skoXC1*-1)>0,skoXC1!=0,0>skoXC1,skoXC1*skoXC1*skoXC1*skoXC1*skoXC1*-2>0,skoXC1*(60+skoXC1*(-12+skoXC1))<=120]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) [[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1+(skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[-12<(skoXC1 (6+(skoXC1 (1+(skoXC1 skoXC1 skoXC1 (1/60+(skoXC1 (-1/60))))))))]/\[[(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (1/60))<=0]/\[[-12<(skoXC1 (-6+skoXC1))]/\[[-12<(skoXC1 (6+skoXC1))]/\[[(skoXC1 (6+(skoXC1 (-1))))<=12]/\[[0<(skoXC1 skoXC1 (6+(skoXC1 (-1))))]/\[[skoXC1 /=0]/\[[skoXC1<0]/\[[0<(skoXC1 skoXC1 skoXC1 skoXC1 skoXC1 (-2))]/\[(skoXC1 (60+(skoXC1 (-12+skoXC1))))<=120]]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (assert (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (and (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (and (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (and (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (and (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (and (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (and (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (and (!= skoXC1 0.) (and (> 0. skoXC1) (and (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.) (<= (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (+ (- 1.) (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) 0.) (> (* skoXC1 (+ 6. (* skoXC1 (+ 1. (* skoXC1 (* skoXC1 (* skoXC1 (+ (/ 1. 60.) (* skoXC1 (/ (- 1.) 60.)))))))))) (- 12.)) (<= (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (/ 1. 60.)))))) 0.) (> (* skoXC1 (+ (- 6.) skoXC1)) (- 12.)) (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (<= (* skoXC1 (+ 6. (* skoXC1 (- 1.)))) 12.) (> (* skoXC1 (* skoXC1 (+ 6. (* skoXC1 (- 1.))))) 0.) (!= skoXC1 0.) (> 0. skoXC1) (> (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (* skoXC1 (- 2.)))))) 0.)) (succedent (> (* skoXC1 (+ 60. (* skoXC1 (+ (- 12.) skoXC1)))) 120.)))
+-----[end problem]-----
+

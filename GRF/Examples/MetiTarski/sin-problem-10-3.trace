@@ -1,0 +1,14 @@
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoCM1C1,skoCP1C1,skoCC1,skoXC1}, And[skoCP1C1*skoCM1C1*-2<=0,skoCP1C1*skoCM1C1*2<=0,skoCP1C1*(-1+skoCM1C1*(-1/7))<=skoCM1C1,0>skoCM1C1,-1+skoCP1C1*skoCP1C1*skoCP1C1==skoXC1,1+skoCM1C1*skoCM1C1*skoCM1C1==skoXC1,skoCC1*skoCC1*skoCC1==skoXC1,0<=skoCP1C1,0<=skoCM1C1,0<=skoCC1,skoXC1>(7/5)]], Reals]]
+
+% In QepcadB format:
+(E skoCM1C1) (E skoCP1C1) (E skoCC1) (E skoXC1) [[(skoCP1C1 skoCM1C1 (-2))<=0]/\[[(skoCP1C1 skoCM1C1 (2))<=0]/\[[(skoCP1C1 (-1+(skoCM1C1 (-1/7))))<=skoCM1C1]/\[[skoCM1C1<0]/\[[(-1+(skoCP1C1 skoCP1C1 skoCP1C1))=skoXC1]/\[[(1+(skoCM1C1 skoCM1C1 skoCM1C1))=skoXC1]/\[[(skoCC1 skoCC1 skoCC1)=skoXC1]/\[[0<=skoCP1C1]/\[[0<=skoCM1C1]/\[[0<=skoCC1]/\[7/5<skoXC1]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoCM1C1 () Real) (declare-fun skoCP1C1 () Real) (declare-fun skoCC1 () Real) (declare-fun skoXC1 () Real) (assert (and (<= (* skoCP1C1 (* skoCM1C1 (- 2.))) 0.) (and (<= (* skoCP1C1 (* skoCM1C1 2.)) 0.) (and (<= (* skoCP1C1 (+ (- 1.) (* skoCM1C1 (/ (- 1.) 7.)))) skoCM1C1) (and (> 0. skoCM1C1) (and (= (+ (- 1.) (* skoCP1C1 (* skoCP1C1 skoCP1C1))) skoXC1) (and (= (+ 1. (* skoCM1C1 (* skoCM1C1 skoCM1C1))) skoXC1) (and (= (* skoCC1 (* skoCC1 skoCC1)) skoXC1) (and (<= 0. skoCP1C1) (and (<= 0. skoCM1C1) (and (<= 0. skoCC1) (> skoXC1 (/ 7. 5.)))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= (* skoCP1C1 (* skoCM1C1 (- 2.))) 0.) (<= (* skoCP1C1 (* skoCM1C1 2.)) 0.) (<= (* skoCP1C1 (+ (- 1.) (* skoCM1C1 (/ (- 1.) 7.)))) skoCM1C1) (> 0. skoCM1C1) (= (+ (- 1.) (* skoCP1C1 (* skoCP1C1 skoCP1C1))) skoXC1) (= (+ 1. (* skoCM1C1 (* skoCM1C1 skoCM1C1))) skoXC1) (= (* skoCC1 (* skoCC1 skoCC1)) skoXC1) (<= 0. skoCP1C1) (<= 0. skoCM1C1) (<= 0. skoCC1)) (succedent (<= skoXC1 (/ 7. 5.))))
+-----[end problem]-----
+

@@ -1,0 +1,14 @@
+-----[begin problem]-----
+% In Mathematica format:
+Timing[Resolve[Exists[{skoXC1}, And[0<=Pi,Pi<=0,skoXC1*Pi*-1>Pi*-1,skoXC1*Pi*-1<=0,skoXC1*(Pi*-1+skoXC1*(Pi*Pi*Pi+skoXC1*(Pi*Pi*Pi*-2+skoXC1*Pi*Pi*Pi)))>0,0<=Pi,skoXC1*(Pi+skoXC1*Pi*-1)>0,skoXC1*(Pi*-1+skoXC1*Pi)<=1,skoXC1*(Pi+skoXC1*Pi*-1)<=1,Pi>(15707963/5000000),(31415927/10000000)>Pi]], Reals]]
+
+% In QepcadB format:
+(E skoXC1) (E pi) [[0<=pi]/\[[pi<=0]/\[[(pi (-1))<(skoXC1 pi (-1))]/\[[(skoXC1 pi (-1))<=0]/\[[0<(skoXC1 ((pi (-1))+(skoXC1 ((pi pi pi)+(skoXC1 ((pi pi pi (-2))+(skoXC1 pi pi pi)))))))]/\[[0<=pi]/\[[0<(skoXC1 (pi+(skoXC1 pi (-1))))]/\[[(skoXC1 ((pi (-1))+(skoXC1 pi)))<=1]/\[[(skoXC1 (pi+(skoXC1 pi (-1))))<=1]/\[[15707963/5000000<pi]/\[pi<31415927/10000000]]]]]]]]]]].
+
+% In SMTLib2 format:
+(declare-fun skoXC1 () Real) (declare-fun metit_our_pi () Real) (assert (and (<= 0. metit_our_pi) (and (<= metit_our_pi 0.) (and (> (* skoXC1 (* metit_our_pi (- 1.))) (* metit_our_pi (- 1.))) (and (<= (* skoXC1 (* metit_our_pi (- 1.))) 0.) (and (> (* skoXC1 (+ (* metit_our_pi (- 1.)) (* skoXC1 (+ (* metit_our_pi (* metit_our_pi metit_our_pi)) (* skoXC1 (+ (* metit_our_pi (* metit_our_pi (* metit_our_pi (- 2.)))) (* skoXC1 (* metit_our_pi (* metit_our_pi metit_our_pi))))))))) 0.) (and (<= 0. metit_our_pi) (and (> (* skoXC1 (+ metit_our_pi (* skoXC1 (* metit_our_pi (- 1.))))) 0.) (and (<= (* skoXC1 (+ (* metit_our_pi (- 1.)) (* skoXC1 metit_our_pi))) 1.) (and (<= (* skoXC1 (+ metit_our_pi (* skoXC1 (* metit_our_pi (- 1.))))) 1.) (and (> metit_our_pi (/ 15707963. 5000000.)) (> (/ 31415927. 10000000.) metit_our_pi))))))))))))
+
+% In GRF format:
+(sequent " MetiTarski formula " (antecedent (<= 0. metit_our_pi) (<= metit_our_pi 0.) (> (* skoXC1 (* metit_our_pi (- 1.))) (* metit_our_pi (- 1.))) (<= (* skoXC1 (* metit_our_pi (- 1.))) 0.) (> (* skoXC1 (+ (* metit_our_pi (- 1.)) (* skoXC1 (+ (* metit_our_pi (* metit_our_pi metit_our_pi)) (* skoXC1 (+ (* metit_our_pi (* metit_our_pi (* metit_our_pi (- 2.)))) (* skoXC1 (* metit_our_pi (* metit_our_pi metit_our_pi))))))))) 0.) (<= 0. metit_our_pi) (> (* skoXC1 (+ metit_our_pi (* skoXC1 (* metit_our_pi (- 1.))))) 0.) (<= (* skoXC1 (+ (* metit_our_pi (- 1.)) (* skoXC1 metit_our_pi))) 1.) (<= (* skoXC1 (+ metit_our_pi (* skoXC1 (* metit_our_pi (- 1.))))) 1.) (> metit_our_pi (/ 15707963. 5000000.))) (succedent (<= (/ 31415927. 10000000.) metit_our_pi)))
+-----[end problem]-----
+
