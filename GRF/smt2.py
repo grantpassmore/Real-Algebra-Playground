@@ -249,7 +249,15 @@ class ParseSMT():
             return (0 - t[1])
 
         def proc_div(s, l, t):
-            return (t[1] / t[2])
+            # print "processing division: "
+            # print "  " + str(t[1]) + "   " + str(t[1].__class__.__name__)
+            # print " by"
+            # print "  " + str(t[2]) + "   " + str(t[1].__class__.__name__)
+            out = (t[1] / t[2])
+            # print "out_type: " + str(out.__class__.__name__)
+            new_out = self.context.QEF.R(out)
+            # print "new_out_type: " + str(new_out.__class__.__name__)
+            return new_out
 
         def proc_var_or_const(s, l, t):
             return self.context.get_ring_var(t[0])
@@ -1000,10 +1008,20 @@ def tests():
 # -- Process completed.
 
 
+    ex_metit_1 = '(sequent "MetiTarski formula" (antecedent (<= (* skoXC1 skoXC1) (+ 50.0 skoXC2)) (> 0.0 skoXC1)) (succedent (> (* skoXC1 skoXC1) (+ skoXC1 50.0))))'
+
+    ex_metit_2 = '(sequent " MetiTarski formula " (antecedent (<= (* skoSC1 (+ (- 1.) (* skoSC1 (+ (- 1.) (* skoSC1 (+ (/ 1. 6.) (* skoSC1 (/ 1. 6.)))))))) 0.) (> (* skoSC1 (+ 1. (* skoSC1 (+ 1. (* skoSC1 (+ (/ (- 1.) 6.) (* skoSC1 (/ (- 1.) 6.)))))))) 0.) (<= (* skoSC1 (+ (- 10.) (* skoSC1 (+ (- 5.) (* skoSC1 (+ (/ 2. 3.) (* skoSC1 (+ (/ (- 1.) 12.) (* skoSC1 (/ (- 1.) 12.)))))))))) 4.) (<= (* skoSC1 (+ (- 1.) (* skoSC1 (- 1.)))) 0.) (<= (- 1.) skoSC1) (> (* skoSC1 (+ (/ (- 3.) 2.) (* skoSC1 (+ 2. (* skoSC1 (+ (/ 1. 2.) (* skoSC1 (+ (/ (- 1.) 24.) (* skoSC1 (* skoSC1 (+ (/ 1. 720.) (* skoSC1 (* skoSC1 (+ (/ (- 1.) 40320.) (* skoSC1 (* skoSC1 (/ 1. 3628800.))))))))))))))))) (/ 5. 2.)) (> (* skoSC1 (+ (/ (- 3.) 2.) (* skoSC1 (+ 2. (* skoSC1 (/ 1. 2.)))))) (/ 5. 2.)) (<= skoSC1 3.) (<= 0. skoSC1) (> skoSC1 (- 1.)) (> skoSC1 0.) (<= (* skoSC1 (+ (- 10.) (* skoSC1 (+ (- 5.) (* skoSC1 (+ 1. (* skoSC1 (+ (/ (- 1.) 12.) (* skoSC1 (/ (- 1.) 12.)))))))))) 4.) (<= (* skoSC1 (+ (/ 3. 2.) (* skoSC1 (+ (- 2.) (* skoSC1 (/ (- 1.) 2.)))))) (/ (- 5.) 2.))) (succedent (> (* skoSC1 (+ (/ 3. 2.) (* skoSC1 (+ (- 2.) (* skoSC1 (+ (/ (- 1.) 2.) (* skoSC1 (+ (/ 1. 24.) (* skoSC1 (* skoSC1 (+ (/ (- 1.) 720.) (* skoSC1 (* skoSC1 (+ (/ 1. 40320.) (* skoSC1 (* skoSC1 (/ (- 1.) 3628800.))))))))))))))))) (/ (- 5.) 2.))))'
+
+    ex_metit_3 = '(sequent " MetiTarski formula " (antecedent (> (* skoXC1 (+ 6. skoXC1)) (- 12.)) (> (* skoYC1 (+ (* skoXC1 (+ (- 72.) (* skoXC1 (+ 36. (* skoXC1 (- 6.)))))) (* skoYC1 (* skoXC1 (+ 12. (* skoXC1 (+ (- 6.) skoXC1))))))) (* skoXC1 (+ (- 144.) (* skoXC1 (+ 72. (* skoXC1 (- 12.))))))) (> (* skoYC1 (+ (* skoXC1 (+ (- 13824.) (* skoXC1 (* skoXC1 (* skoXC1 (+ 144. (* skoXC1 (+ (- 24.) (* skoXC1 (+ (- 24.) (* skoXC1 (+ (- 6.) (* skoXC1 (- 1.)))))))))))))) (* skoYC1 (* skoXC1 2304.)))) (* skoXC1 (- 27648.))) (> (* skoYC1 (+ (* skoXC1 (+ (- 72.) (* skoXC1 (+ 36. (* skoXC1 (- 6.)))))) (* skoYC1 (* skoXC1 (+ 12. (* skoXC1 (+ (- 6.) skoXC1))))))) (* skoXC1 (+ (- 144.) (* skoXC1 (+ 72. (* skoXC1 (- 12.))))))) (<= (* skoYC1 (+ (+ (- 12.) (* skoXC1 (* skoXC1 (- 1.)))) (* skoYC1 (* skoXC1 (- 1.))))) (* skoXC1 12.)) (> (* skoYC1 (+ (* skoXC1 12.) (* skoYC1 (+ (+ 12. (* skoXC1 skoXC1)) (* skoYC1 skoXC1))))) 0.) (> (* skoYC1 (* skoYC1 (* skoYC1 (+ (* skoXC1 (* skoXC1 144.)) (* skoYC1 (+ (* skoXC1 (* skoXC1 (- 24.))) (* skoYC1 (+ (* skoXC1 (* skoXC1 (- 24.))) (* skoYC1 (+ (* skoXC1 (* skoXC1 (- 6.))) (* skoYC1 (* skoXC1 (* skoXC1 (- 1.)))))))))))))) (* skoXC1 (+ (- 27648.) (* skoXC1 (+ 13824. (* skoXC1 (- 2304.))))))) (> (* skoYC1 (+ (* skoXC1 (+ (- 12.) (* skoXC1 (+ 12. (* skoXC1 (+ 5. skoXC1)))))) (* skoYC1 (* skoXC1 (+ 12. (* skoXC1 (+ 5. skoXC1))))))) (* skoXC1 (* skoXC1 12.))) (<= (* skoXC1 (+ (- 6.) (* skoXC1 (- 1.)))) 12.) (<= (* skoYC1 (* skoXC1 (- 1.))) 0.) (<= (* skoXC1 (+ (- 2304.) (* skoXC1 (+ (- 1152.) (* skoXC1 (+ (- 384.) (* skoXC1 (+ (- 84.) (* skoXC1 (+ (- 12.) (* skoXC1 (- 1.)))))))))))) 2304.) (> (* skoYC1 (+ (+ 1. (* skoXC1 (* skoXC1 (/ 1. 12.)))) (* skoYC1 (* skoXC1 (/ 1. 12.))))) (* skoXC1 (- 1.))) (<= 0. skoYC1) (<= (* skoYC1 (+ (* skoXC1 (* skoXC1 (* skoXC1 (/ (- 1.) 12.)))) (* skoYC1 (* skoXC1 (* skoXC1 (/ (- 1.) 12.)))))) (* skoXC1 skoXC1)) (> (* skoYC1 (+ (+ 1. (* skoXC1 (+ (- 1.) (* skoXC1 (/ 1. 12.))))) (* skoYC1 (* skoXC1 (/ 1. 12.))))) (* skoXC1 (- 1.))) (<= (* skoYC1 (+ (+ (- 1.) (* skoXC1 (* skoXC1 (/ (- 1.) 12.)))) (* skoYC1 (* skoXC1 (/ (- 1.) 12.))))) skoXC1) (<= (* skoYC1 (+ (+ (- 1.) (* skoXC1 (+ 1. (* skoXC1 (/ (- 1.) 12.))))) (* skoYC1 (* skoXC1 (/ (- 1.) 12.))))) skoXC1) (> (* skoYC1 skoXC1) 0.) (<= 0. skoXC1) (<= (* skoXC1 (- 1.)) skoYC1) (> skoYC1 (* skoXC1 (- 1.))) (> skoYC1 0.) (> skoXC1 0.)) (succedent (> (* skoYC1 (+ (- 2304.) (* skoYC1 (+ (- 1152.) (* skoYC1 (+ (- 384.) (* skoYC1 (+ (- 84.) (* skoYC1 (+ (- 12.) (* skoYC1 (- 1.)))))))))))) 2304.)))'
+
+    ex_metit_4 = '(sequent " MetiTarski formula " (antecedent (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1)))))))))))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1))))))))))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1)))))))))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1))))))))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1)))))))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1))))))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1)))))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1))))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1)))) 0.) (!= (* skoSM1C1 (* skoSM1C1 (* skoSM1C1 skoSM1C1))) 0.) (!= (* skoSM1C1 (* skoSM1C1 skoSM1C1)) 0.) (!= (* skoSM1C1 skoSM1C1) 0.) (!= skoSM1C1 0.) (> skoXC1 1.) (> skoSP1C1 0.) (> skoSM1C1 0.) (> skoSC1 0.)) (succedent (<= 5. skoXC1)))'
+
+    ex_metit_5 = '(sequent " MetiTarski formula " (antecedent (> (* skoZC1 (+ (+ (+ (+ (- 2.) (* skoWC1 (* skoWC1 (/ 1. 2.)))) (* skoXC1 (+ skoWC1 (* skoXC1 (/ 1. 2.))))) (* skoYC1 (+ (+ skoWC1 skoXC1) (* skoYC1 (/ 1. 2.))))) (* skoZC1 (+ (+ (+ (* skoWC1 (/ 1. 2.)) (* skoXC1 (/ 1. 2.))) (* skoYC1 (/ 1. 2.))) (* skoZC1 (/ 1. 3.)))))) (+ (+ (* skoWC1 (+ 2. (* skoWC1 (* skoWC1 (/ (- 1.) 3.))))) (* skoXC1 (+ (+ 2. (* skoWC1 (* skoWC1 (/ (- 1.) 2.)))) (* skoXC1 (+ (* skoWC1 (/ (- 1.) 2.)) (* skoXC1 (/ (- 1.) 3.))))))) (* skoYC1 (+ (+ (+ 2. (* skoWC1 (* skoWC1 (/ (- 1.) 2.)))) (* skoXC1 (+ (* skoWC1 (- 1.)) (* skoXC1 (/ (- 1.) 2.))))) (* skoYC1 (+ (+ (* skoWC1 (/ (- 1.) 2.)) (* skoXC1 (/ (- 1.) 2.))) (* skoYC1 (/ (- 1.) 6.)))))))) (> skoXC1 0.) (> skoWC1 0.) (> skoZC1 (+ (+ (* skoWC1 (- 1.)) (* skoXC1 (- 1.))) (* skoYC1 (- 1.)))) (> 3. skoWC1) (> 3. skoXC1) (> 3. skoYC1) (> 3. skoZC1) (> skoWC1 (/ 1. 10.)) (> skoXC1 (/ 1. 10.)) (> skoYC1 (/ 1. 10.))) (succedent (<= skoZC1 (/ 1. 10.))))'
+
     P = ParseSMT()
     print "\n\n-- Below should be an empty context."
     P.context.show()
-    ctxt = P.processCommands(ex_hiding_1)
+    ctxt = P.processCommands(ex_metit_5)
     print "\n\n-- Below should be a non-empty context."
     ctxt.show()
     print "\n\n-- Hiding result:"

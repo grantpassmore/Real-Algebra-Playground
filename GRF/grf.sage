@@ -738,7 +738,10 @@ class QE_Factory(RCF):
         # dictionaries from them.
         print (".:. " + str(len(self.cell_sps[self.num_vars-1])) +
                " " + str(self.num_vars) + "-dimensional sample points isolated.")
-        final_dicts = [self.sp_dict(s) for s in self.cell_sps[self.num_vars-1]]
+        if self.num_vars > 1:
+            final_dicts = [self.sp_dict(s) for s in self.cell_sps[self.num_vars-1]]
+        else:
+            final_dicts = [self.sp_dict([s]) for s in self.cell_sps[self.num_vars-1]]
         print ".:. Sample point substitution dictionaries in self.final_sp_dicts."
         self.final_sp_dicts = final_dicts
 
