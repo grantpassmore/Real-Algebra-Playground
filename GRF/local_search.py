@@ -179,18 +179,8 @@ def local_search_sampling(Prob,D,sample_params):
 
             # Sets up a function so that root solving it flips
             # the choosen polynomial
-            symbolic = True
-            if symbolic:
-                f = get_symb_flipping_func(A,x,margin)
-                sys.stderr.write("|f.variables()| = {0}"\
-                                     .format(len(f.variables())))
-                sys.stderr.write("|x| = {0}".format(len(x)))
-                print "|x| =",len(x)
-                assert(len(f.variables()) == len(x))
-                x = symb_min(f,x)
-            else:
-                f = get_symb_flipping_func(A,x,margin)
-                x = sp_opt.fsolve(f,x,xtol=1e-3)
+            f = get_num_flipping_func(A,x,margin)
+            x = sp_opt.fsolve(f,x,xtol=1e-3)
 
             # Add this point plus some perturbed neighbours
             points =  [x]\

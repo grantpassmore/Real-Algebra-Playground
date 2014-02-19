@@ -8,14 +8,14 @@ import numpy as np
 import math
 
 # Config
-Timeout = 900 # 15 minutes
+Timeout = 1800 # 30 minutes
 Cores = 30
 SMT_Files = glob.glob("/usr0/home/grantp/GRF/Examples/HidingProblems/*.smt")
 #Files_Indices = [26,29,28,24,25,23,22,21,20,18,17,14,10,9,3,0,1]
-Files_Indices = [0]
+Files_Indices = [22]
 #Files_Indices = range(len(SMT_Files))
 
-param_samples = 30
+param_samples = 180
 sample_dist = lambda: random.randint(0,500)
 epsilon_dist = lambda: 0.05*random.random()
 
@@ -39,7 +39,7 @@ Main function
 """
 if __name__ == '__main__':
   FH = open("test.csv","w") 
-  FH.write("# Samples, Epsilon, Time\n");
+  FH.write("# Samples, Epsilon, Time, Hides\n");
   load('grf.sage')
   load('smt2.py')
 
@@ -83,10 +83,12 @@ if __name__ == '__main__':
         Times.append(elapsed)
         sys.stderr.write('Removed {0}; finished ({1}s)\n'\
                            .format(proc_struct.id, elapsed))
+        hides = sum(return_dict[proc_struct.id])
         FH.write(",".join(map(str, [proc_struct.params.file_id,\
-                                proc_struct.params.samples,\
-                                proc_struct.params.epsilon,\
-                                elapsed])) + "\n")
+                                      proc_struct.params.samples,\
+                                      proc_struct.params.epsilon,\
+                                      elapsed,\
+                                      hides])) + "\n")
         running_queue.pop(i)
         RQ = RQ - 1;
         break
@@ -96,9 +98,10 @@ if __name__ == '__main__':
         Times.append(float('inf'))
         sys.stderr.write('Removed {0}; timeout\n'.format(proc_struct.id))
         FH.write(",".join(map(str, [proc_struct.params.file_id,\
-                                proc_struct.params.samples,\
-                                proc_struct.params.epsilon,\
-                                "NaN"])) + "\n")
+                                      proc_struct.params.samples,\
+                                      proc_struct.params.epsilon,\
+                                      "NaN",\
+                                      "NaN"])) + "\n")
         proc_struct.process.terminate();
         running_queue.pop(i)
         RQ = RQ - 1;
