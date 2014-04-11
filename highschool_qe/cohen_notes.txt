@@ -1,0 +1,2 @@
+what if pseudo div coef is zero
+  - divide by tail?

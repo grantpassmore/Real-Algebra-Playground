@@ -2,6 +2,14 @@ import sympy
 import uni_vts
 
 def convert(poly):
+  """Converts a sympy polynomial to list of coefficients. Where ith element
+  corresponds to ith power in the polynomial, list is of length degree(poly).
+  
+  Keyword arguments:
+  poly -- polynomial to be converted (univariate)
+  
+  return -- list of coefficients
+  """
   poly = poly.expand()
   symbols = poly.free_symbols
   if len(symbols) > 1:
@@ -28,5 +36,35 @@ def convert(poly):
 
 def ts(eq, lt):
   return uni_vts.internal_ts(map(convert, eq), map(convert, lt))
+
+
+def ts(le, lt, eq, ne):
+  """Determines the satisfiability of the constraints by term substitution.
+  
+  Keyword arguments:
+  le -- polynomials that are <= 0 (sympy format, univariate)
+  lt -- polynomials that are < 0 (sympy format, univariate)
+  eq -- polynomials that are = 0 (sympy format, univariate)
+  ne -- polynomials that are != 0 (sympy format, univariate)
+  
+  return boolean corresponding to satisfiability of constraints
+  """
+  converted_le = map(convert, le)
+  converted_lt = map(convert, lt)
+  converted_eq = map(convert, eq)
+  converted_ne = map(convert, ne)
+  
+  """
+  print converted_le
+  print converted_lt
+  print converted_eq
+  print converted_ne
+  """
+  return uni_vts.internal_ts(converted_le, converted_lt, \
+      converted_eq, converted_ne)
+  #return uni_vts.internal_ts(map(convert, eq), map(convert, lt))
+  
 def vts(eq, lt):
   return uni_vts.internal_vts(map(convert, eq), map(convert, lt))
+  
+  

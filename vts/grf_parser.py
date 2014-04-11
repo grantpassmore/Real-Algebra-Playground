@@ -1,27 +1,22 @@
 import pyparsing as pyp
 import sympy
+  
+def doReal(s,l,t):
+  if t[0] == "-":
+    return -sympy.Float(t[1])
+  else:
+    return sympy.Float(t[0])
 
-class Parser:
-  def __init__(self):
-    pass
-  
-  @staticmethod
-  def doReal(s,l,t):
-    if t[0] == "-":
-      return -sympy.Float(t[1])
-    else:
-      return sympy.Float(t[0])
-  
-  @staticmethod
-  def doInt(s,l,t):
-    if t[0] == "-":
-      return -sympy.Integer(t[1])
-    else:
-      return sympy.Integer(t[0])
+def doInt(s,l,t):
+  if t[0] == "-":
+    return -sympy.Integer(t[1])
+  else:
+    return sympy.Integer(t[0])
 
     
 def doVariable(s, l, t):
   return sympy.var(t[0])
+  #return sympy.var('x')
   
 def proc_le(s, l, t):
   return sympy.Le(t[0], t[1])
@@ -43,18 +38,19 @@ nat = pyp.Word(pyp.nums)
 lit_dot = pyp.Literal(".")
 lit_unary_neg = pyp.Literal('-')
 
-int = (pyp.Optional(lit_unary_neg) + nat + pyp.NotAny(lit_dot + nat)).\
-  setParseAction(Parser.doInt)
+int = (pyp.Optional(lit_unary_neg) + nat + pyp.Optional(lit_dot)).\
+  setParseAction(doInt)
 
 real = (pyp.Optional(lit_unary_neg) + 
-    pyp.Combine(nat + lit_dot + pyp.Optional(nat))).\
-  setParseAction(Parser.doReal)
+    pyp.Combine(nat + lit_dot + nat)).\
+  setParseAction(doReal)
 
 
 # can't parse 1. as sympy.Float(1)
 # sympy.var('x') != sympy.var('x') * sympy.Float(1)
 # sympy.var('x') == sympy.var('x') * sympy.Integer(1)  
-number = (int | real)
+# TODO make nat.nat not int (2)
+number = (real | int)
 
 lit_lpar = pyp.Literal('(').suppress()
 lit_rpar = pyp.Literal(')').suppress()
@@ -87,7 +83,7 @@ fn_neg = (lit_lpar + lit_minus + term + lit_rpar).\
   setParseAction(lambda s, l, t: -t[0])
   
 
-fn = fn_add | fn_mult | fn_sub | fn_div | fn_neg
+fn = (fn_add | fn_mult | fn_sub | fn_div | fn_neg)#.setParseAction(lambda s, l, t: t[0].expand())
 term << (var_or_number | fn)
 
 kw_le = pyp.Keyword('<=').suppress()
