@@ -64,7 +64,13 @@ def ts(le, lt, eq, ne):
       converted_eq, converted_ne)
   #return uni_vts.internal_ts(map(convert, eq), map(convert, lt))
   
-def vts(eq, lt):
-  return uni_vts.internal_vts(map(convert, eq), map(convert, lt))
+def vts(le, lt, eq, ne):
+  converted_le = map(convert, le)
+  converted_lt = map(convert, lt)
+  converted_eq = map(convert, eq)
+  converted_ne = map(convert, ne)
+  
+  print uni_vts.internal_vts(converted_le, converted_lt, \
+      converted_eq, converted_ne)
   
   
