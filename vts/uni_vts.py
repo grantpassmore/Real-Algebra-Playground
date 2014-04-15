@@ -98,15 +98,15 @@ def internal_vts(le, lt, eq, ne):
   all_polies = (le + lt + eq + ne)
 
   for exact_poly in (le + eq):
-    print "exact_poly: %s" %exact_poly
+    # print "exact_poly: %s" %exact_poly
     roots = z3rcf.MkRoots(exact_poly)
     droots = get_discri_der_signs(roots, exact_poly)
     map(lambda d: d.set_origin_poly(exact_poly), droots)
     
     for droot in droots:
-      print "droot: %s" %droot
+      # print "droot: %s" %droot
       formula_value = evaluate_on_sign_assignment(droot, all_polies, sign_lookup)
-      print "formula_value: %s" %formula_value
+      # print "formula_value: %s" %formula_value
       if formula_value:
         return True
     
@@ -115,21 +115,20 @@ def internal_vts(le, lt, eq, ne):
     droots = get_discri_der_signs(roots, e_close_poly)
     map(lambda d: d.set_origin_poly(e_close_poly), droots)
     
-    print 'TODO'
     for droot in droots:
-      print "droot: %s" %droot
+      # print "droot: %s" %droot
       formula_value = e_close_evaluate_on_sign_assignment(
           droot, all_polies, sign_lookup)
-      print "formula_value: %s" %formula_value
+      # print "formula_value: %s" %formula_value
       if formula_value:
         return True
   
   for poly in all_polies:
     # print poly
     # print sign
-    # print sign_lookup[tuple(poly)]
+    # print sign_lookup[make_poly_hashabel(poly)]
     sign = sign_func(poly[-1] * (-1)**((len(poly) - 1)%2))
-    if not sign in sign_lookup[tuple(poly)]:
+    if not sign in sign_lookup[make_poly_hashabel(poly)]:
       return False
   
   return True
@@ -367,7 +366,7 @@ def evaluate_single_on_sign_assignment(discDerSign, goal):
   
   # TODO remove
   # calculate the sign to check 
-  calc_sign = get_sign_by_direct_calc(polies, discDerSign)
+  # calc_sign = get_sign_by_direct_calc(polies, discDerSign)
   # print "calc_sign: %s" %calc_sign
   # return calc_sign
   
@@ -379,24 +378,28 @@ def evaluate_single_on_sign_assignment(discDerSign, goal):
   
   
   # TODO also remove (see calculation)
-  if calc_sign != goal_sign:
-    raise Exception("calculated one differed from goal_sign")
+  # if calc_sign != goal_sign:
+    # raise Exception("calculated one differed from goal_sign")
   
   return goal_sign
+
+#TODO change this
+def make_poly_hashabel(poly):
+  return tuple(map(str, poly))
 
 def sign_conditions_lookup(le, lt, eq, ne):
   sign_lookup = {}
   
   for p in (le + lt + eq + ne):
-    sign_lookup[tuple(p)] = {-1, 0, 1}
+    sign_lookup[make_poly_hashabel(p)] = {-1, 0, 1}
   for p in le:
-    sign_lookup[tuple(p)] = sign_lookup[tuple(p)].intersection({-1, 0})
+    sign_lookup[make_poly_hashabel(p)] = sign_lookup[make_poly_hashabel(p)].intersection({-1, 0})
   for p in lt:
-    sign_lookup[tuple(p)] = sign_lookup[tuple(p)].intersection({-1})
+    sign_lookup[make_poly_hashabel(p)] = sign_lookup[make_poly_hashabel(p)].intersection({-1})
   for p in eq:
-    sign_lookup[tuple(p)] = sign_lookup[tuple(p)].intersection({0})
+    sign_lookup[make_poly_hashabel(p)] = sign_lookup[make_poly_hashabel(p)].intersection({0})
   for p in ne:
-    sign_lookup[tuple(p)] = sign_lookup[tuple(p)].intersection({-1, 1})
+    sign_lookup[make_poly_hashabel(p)] = sign_lookup[make_poly_hashabel(p)].intersection({-1, 1})
   return sign_lookup
 
 def e_close_evaluate_single_on_sign_assignment(discDerSign, poly):
@@ -411,21 +414,21 @@ def e_close_evaluate_single_on_sign_assignment(discDerSign, poly):
   
 def e_close_evaluate_on_sign_assignment(discDerSign, all_polies, sign_lookup):
   for poly in all_polies:
-    print "e_close: %s" %poly
+    # print "e_close: %s" %poly
     sign = e_close_evaluate_single_on_sign_assignment(discDerSign, poly)
-    print "sign: %s" %sign
+    # print "sign: %s" %sign
     
-    if not sign in sign_lookup[tuple(poly)]:
+    if not sign in sign_lookup[make_poly_hashabel(poly)]:
       return False
   return True
   
 def evaluate_on_sign_assignment(discDerSign, all_polies, sign_lookup):
   for poly in all_polies:
     sign = evaluate_single_on_sign_assignment(discDerSign, poly)
-    print "poly: %s" %poly
-    print "sign: %s" %sign
-    # print sign_lookup[tuple(poly)]
-    if not sign in sign_lookup[tuple(poly)]:
+    # print "poly: %s" %poly
+    # print "sign: %s" %sign
+    # print sign_lookup[make_poly_hashabel(poly)]
+    if not sign in sign_lookup[make_poly_hashabel(poly)]:
       return False
   return True
 
@@ -440,17 +443,17 @@ class DiscDerSigns:
   def add_pos_poly(self, poly):
     self.pos_polies.append(poly)
     self.__add_poly_to_all_polies(poly)
-    self.__lookup[tuple(poly)] = 1
+    self.__lookup[make_poly_hashabel(poly)] = 1
     
   def add_neg_poly(self, poly):
     self.neg_polies.append(poly)
     self.__add_poly_to_all_polies(poly)
-    self.__lookup[tuple(poly)] = -1
+    self.__lookup[make_poly_hashabel(poly)] = -1
     
   def add_zer_poly(self, poly):
     self.zer_polies.append(poly)
     self.__add_poly_to_all_polies(poly)
-    self.__lookup[tuple(poly)] = 0
+    self.__lookup[make_poly_hashabel(poly)] = 0
     
   def get_all_polies(self):
     return self.all_polies
@@ -458,7 +461,7 @@ class DiscDerSigns:
   def set_origin_poly(self, poly):
     self.origin = poly
     self.__add_poly_to_all_polies(poly)
-    self.__lookup[tuple(poly)] = 0
+    self.__lookup[make_poly_hashabel(poly)] = 0
     
   def __add_poly_to_all_polies(self, poly):
     if poly in self.all_polies:
@@ -466,7 +469,7 @@ class DiscDerSigns:
     self.all_polies.append(poly)
     
   def get_sign(self, poly):
-    return self.__lookup[tuple(poly)]
+    return self.__lookup[make_poly_hashabel(poly)]
     
   def __repr__(self):
     #return '[\npoint: %s\n  <:%s\n  0:%s\n  >:%s\n]' \

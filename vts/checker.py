@@ -15,8 +15,8 @@ def check_examples(vts=True):
   results = {}
   for dir in uni_examples:
     # some slow examples are in Metitarski
-    if not dir == 'HidingProblems':
-      continue
+    # if not dir == 'HidingProblems':
+      # continue
     for file in uni_examples[dir]:
       print file
       

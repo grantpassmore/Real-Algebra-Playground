@@ -102,10 +102,10 @@ def unpickle_dirs():
   met_dir = os.path.join(base_dir, 'MetiTarski')
   hid_dir = os.path.join(base_dir, 'HidingProblems')
   
-  # met_results = unpickle_from_dir(met_dir)
+  met_results = unpickle_from_dir(met_dir)
   hid_results = unpickle_from_dir(hid_dir)
   return {
-    # 'Metitarski':met_results, 
+    'Metitarski':met_results, 
     'HidingProblems':hid_results
   }
   
@@ -143,11 +143,11 @@ def parse_example_dirs():
   met_dir = os.path.join(base_dir, 'MetiTarski')
   hid_dir = os.path.join(base_dir, 'HidingProblems')
   
-  #met_results = parse_files_from_dir(met_dir)
-  hid_results = parse_files_from_dir(hid_dir)
+  met_results = parse_files_from_dir(met_dir)
+  #hid_results = parse_files_from_dir(hid_dir)
   return {
-    #'Metitarski':met_results, 
-    'HidingProblems':hid_results
+    'Metitarski':met_results, 
+    #'HidingProblems':hid_results
   }
   
 def parse_files_from_dir(dir):
