@@ -1,5 +1,7 @@
 import z3rcf
 import sympy
+import isym # used in checking
+
 
 import matrix_of_signs
 
@@ -93,9 +95,9 @@ def internal_ts(le, lt, eq, ne):
   
   
 def internal_vts(le, lt, eq, ne):
-
   sign_lookup = sign_conditions_lookup(le, lt, eq, ne)
   all_polies = (le + lt + eq + ne)
+  # print "internal"
 
   for exact_poly in (le + eq):
     # print "exact_poly: %s" %exact_poly
@@ -204,6 +206,11 @@ def remainder(f, g):
   
   if lc_f == 0:
     return remainder(f[:-1], g)
+    
+  # can't change the sign of the remainder
+  if lc_g < 0:
+    lc_g = -lc_g
+    lc_f = -lc_f
   
   if len(f) < len(g):
     return f
@@ -212,12 +219,12 @@ def remainder(f, g):
   padding = [0] * (len(f) - len(g))
   
   # TODO again ask about precision
-  if isinstance(lc_f, int) and isinstance(lc_g, int):
-    coef = lc_f / float(lc_g)
-  else:
-    coef = lc_f / lc_g
+  # if isinstance(lc_f, int) and isinstance(lc_g, int):
+    # coef = lc_f / float(lc_g)
+  # else:
+    # coef = lc_f / lc_g
     
-  q_first_term_by_g = padding + map(lambda p: p * coef, g)
+  q_first_term_by_g = padding + map(lambda p: p, g)
   
   """print "f: %s" %f
   print "g: %s" %g
@@ -226,12 +233,14 @@ def remainder(f, g):
   print "coef: %s" %coef
   print "type: %s" %type(coef)"""
   
-  subtracted = map(lambda (c1, c2): c1 - c2, zip(f, q_first_term_by_g))
+  subtracted = map(lambda (c1, c2): c1*lc_g - c2*lc_f, zip(f, q_first_term_by_g))
   return remainder(subtracted[:-1], g)
   
 def signed_remainder_sequence(p, q):
   # print "running"
   rem = remainder(p, q)
+  # srem = sympy.div(isym.convert_back(p), isym.convert_back(q), x)[1]
+  # print (srem - isym.convert_back(rem)).expand()
   if rem == []:
     return [p, q]
     
@@ -243,12 +252,18 @@ def signed_remainder_sequence(p, q):
   
 def signed_remainder_cauchy_index(p, q):
   sequence = signed_remainder_sequence(p, q)
-  
-  #print "p: %s" %p
-  #print "q: %s" %q
+    
+  # print "p: %s" %p
+  # print "q: %s" %q
   
   neg_inf = map(lambda p: p[-1] * (-1)**((len(p) - 1)%2), sequence)
   pos_inf = map(lambda p: p[-1], sequence)
+  
+  # for poly in map(isym.convert_back, sequence):
+    # print "%d. %s" %(map(isym.convert_back, sequence).index(poly), poly)
+  
+  # print "neg_inf: %s" %neg_inf
+  # print "pos_inf: %s" %pos_inf
   
   f_neg_inf = filter(lambda c: c != 0, neg_inf)
   f_pos_inf = filter(lambda c: c != 0, pos_inf)
@@ -267,23 +282,50 @@ def tarski_query(p, q):
   
   # print 'tarksi query'
   p_der = derivative(p)
-  return signed_remainder_cauchy_index(p, multiply(p_der, q))
+  # print (sympy.diff(isym.convert_back(p), sympy.var('x')) - isym.convert_back(p_der)).expand()
+  
+  ret = signed_remainder_cauchy_index(p, multiply(p_der, q))
+  
+  # sp = isym.convert_back(p)
+  # sq = isym.convert_back(q)
+  # rs = sympy.solve(sp, sympy.var('x'))
+  # sum = 0
+  # for r in rs:
+    # sum += sympy.sign( sq.subs([(sympy.var('x'), r)]) )
+  
+  # #test this
+  # #[24, -50, 35, -10, 1], [-50, 170, -220, 134, -38, 4]
+  
+  # # print "ret: %s" %ret
+  # # print "sum: %s" %sum
+  # print "dif: %s" %(ret - sum)
+  # if ret != sum:
+    # print "rs: %s" %rs
+    # print "got: %s" %ret
+    # print "actual: %s" %sum
+    # print sp
+    # print sq
+    # print
+    
+    # raise Exception("different sums: ")
+  
+  return ret
 
 def pick_sign_of_goal(polies, discDerSign, c_matrix):
   # print
   
   off_values = {0: 0, 1: 1, -1: 2}
   
-  total = len(polies)**3
+  total = 3**len(polies)
   
   total_shift = 0
   
-  
+  # print "total: %d" %len(polies)
   for poly in polies[:-1]:
+    # print "%d. poly: %s" %(polies.index(poly), poly)
     step = total / 3**(polies.index(poly) + 1)
     sign = discDerSign.get_sign(poly)
-    # print "poly: %s" %poly
-    # print "index: %s" %polies.index(poly)
+    
     # print "step: %s" %step
     # print "sign: %s" %sign
     total_shift += step * off_values[sign]
@@ -293,8 +335,11 @@ def pick_sign_of_goal(polies, discDerSign, c_matrix):
   # print "total_shift: %s" %total_shift
   
   for sign in off_values:
-    if c_matrix[total_shift + off_values[sign]] == 1:
+    value = c_matrix[total_shift + off_values[sign]]
+    if value == 1:
       return sign
+    if not value in [0, 1]:
+      raise Exception("table had a value that was neither 0 or 1 (%s)" %value)
   raise Exception("no entry in the table was with count 1")
   
 def sign_func(v):
@@ -318,13 +363,40 @@ def get_sign_by_direct_calc(polies, discDerSign):
   if len(good_values) != 1:
     raise Exception("didn't have a good value")
   return good_values[0]
-  
+
+def check_powers(list_products, polies):
+  if len(polies) != 3:
+    return
+  return 
+  print "CHECKING POWERS"
+  c_back = lambda p: isym.convert_back(p)
+  ps =  map(c_back, polies)
+  products = map(c_back, list_products)
+  print "ps[0]: %s" %ps[0]
+  print "ps[1]: %s" %ps[1]
+  print "ps[2]: %s" %ps[2]
+  print "products[i]: %s" %products[1]
+  print "check: %s" %(products[24] - (ps[0]**2 * ps[1]**2 * ps[2]**0)).expand()
+  print "check: %s" %(products[25] - (ps[0]**2 * ps[1]**2 * ps[2]**1)).expand()
+  print "check: %s" %(products[26] - (ps[0]**2 * ps[1]**2 * ps[2]**2)).expand()
+    
+  print
 def evaluate_single_on_sign_assignment(discDerSign, goal):
   if goal == discDerSign.origin:
     return 0
-  # print "goal: %s" %goal  
+    
+  # print "origin: %s" %discDerSign.origin
+  # sympy.pprint( isym.convert_back(discDerSign.origin))
+  
+  # sder =  map(isym.convert_back, discDerSign.get_all_polies())
+  # print sder
+  # print map(lambda p: p.subs([(sympy.var('x'), 4)]), sder)
+  # print "discDerSign: %s" %discDerSign
+  # print "goal: %s" %goal
+  
   
   polies = discDerSign.get_all_polies() + [goal]
+  
   
   M_inv = matrix_of_signs.get_matrix_inverse(len(polies))
   
@@ -348,21 +420,28 @@ def evaluate_single_on_sign_assignment(discDerSign, goal):
 
   product_list = make_product_list(polies)
   
+  check_powers(product_list, polies)
+  
   # calculate tarski query on products
   # make column vector of values
   taq_column = sympy.Matrix(
-    map(lambda p: [tarski_query(discDerSign.origin, p)], product_list)
+    map(lambda poly: [tarski_query(discDerSign.origin, poly)], product_list)
   )
+  
   
   # multiply inverse with column
   c_matrix = M_inv * taq_column
   
-  
-  # s = lambda i: i if i < 2 else -1
   # print polies
-  # for i in range(len(c_matrix.col(0))):
-    # print "(%d, %d, %d) \t" %(s(i/9%3), s(i/3%3), s(i%3)),
+  # print "len(polies): %s" %len(polies)
+  # print "len(c_matrix): %s" % len(c_matrix.col(0))
+  # print discDerSign
+  s = lambda i: i if i < 2 else -1
+  for i in range(len(c_matrix.col(0))):
+    #print "(%+d, %+d, %+d, %+d) \t" %(s(i/27%3), s(i/9%3), s(i/3%3), s(i%3)),
+    # print "(%+d, %+d, %+d) \t" %(s(i/9%3), s(i/3%3), s(i%3)),
     # print c_matrix[i, 0]
+    pass
   
   # TODO remove
   # calculate the sign to check 
@@ -372,6 +451,7 @@ def evaluate_single_on_sign_assignment(discDerSign, goal):
   
   
   # pick the right root based on conditions
+  # print c_matrix
   goal_sign = pick_sign_of_goal(polies, discDerSign, c_matrix)
   # print "goal_sign: %s" %goal_sign
   
@@ -407,15 +487,19 @@ def e_close_evaluate_single_on_sign_assignment(discDerSign, poly):
     return 0
   current = evaluate_single_on_sign_assignment(discDerSign, poly)
   if current != 0:
+    # print "current: %s" %current
     return current
   return e_close_evaluate_single_on_sign_assignment(
       discDerSign, derivative(poly)
   )
   
 def e_close_evaluate_on_sign_assignment(discDerSign, all_polies, sign_lookup):
+  # print "========"
+  # print "evaling at: %s" %discDerSign
+  # print "evaling at: %s" %isym.convert_back(discDerSign.origin)
   for poly in all_polies:
-    # print "e_close: %s" %poly
     sign = e_close_evaluate_single_on_sign_assignment(discDerSign, poly)
+    # print "e_close: %s" %poly
     # print "sign: %s" %sign
     
     if not sign in sign_lookup[make_poly_hashabel(poly)]:
@@ -460,8 +544,8 @@ class DiscDerSigns:
     
   def set_origin_poly(self, poly):
     self.origin = poly
-    self.__add_poly_to_all_polies(poly)
-    self.__lookup[make_poly_hashabel(poly)] = 0
+    #self.__add_poly_to_all_polies(poly)
+    #self.__lookup[make_poly_hashabel(poly)] = 0
     
   def __add_poly_to_all_polies(self, poly):
     if poly in self.all_polies:

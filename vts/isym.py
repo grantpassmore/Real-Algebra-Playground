@@ -32,6 +32,13 @@ def convert(poly):
 
   inf_repr = [mrepr[pow] if mrepr.has_key(pow) else 0 for pow in pows]
   return inf_repr
+
+def convert_back(lpoly):
+  return sum(
+    map(
+      lambda (c, p): c*sympy.var('x')**p, 
+      zip(lpoly, range(len(lpoly))))
+  )
   
 
 def ts(eq, lt):
