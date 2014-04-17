@@ -3,35 +3,54 @@ import uni_vts
 
 def convert(poly):
   """Converts a sympy polynomial to list of coefficients. Where ith element
-  corresponds to ith power in the polynomial, list is of length degree(poly).
+  corresponds to ith power in the polynomial, 
+  list is of length degree(poly) + 1.
+  When coefficients can be cast to int such that c == int(c), 
+  then list of int is returned. 0 is converted to []
   
   Keyword arguments:
   poly -- polynomial to be converted (univariate)
   
   return -- list of coefficients
   """
-  poly = poly.expand()
+
+  if isinstance(poly, int):
+    if poly == 0:
+      return []
+    return [poly]
+
   symbols = poly.free_symbols
+  if len(symbols) == 0:
+    return [poly]
+
+  poly = poly.expand()
+
   if len(symbols) > 1:
     raise Exception("more than one symbol")
-  if len(symbols) == 0:
-    raise Exception("implement constant")
   x = symbols.pop()
-  
-  sympy.LC(poly, x)
-  # get the x terms
-  xterms = poly.as_terms()[0]
-  
-  lrepr = map(lambda t: (t[1][0][0], t[1][1][0]), xterms)
-  mrepr = {}
-  for (c, p) in lrepr:
-    mrepr[p] = c
-  max_pow = sorted(mrepr.keys()).pop()
 
-  pows = range(max_pow + 1)
+  terms = poly.as_ordered_terms()
 
-  inf_repr = [mrepr[pow] if mrepr.has_key(pow) else 0 for pow in pows]
-  return inf_repr
+  leadterms = map(lambda t: t.leadterm(x), terms)
+
+  intterms = map(lambda (c,p): (c,int(p)), leadterms)
+  degree = intterms[0][1]
+  pow_lookup = {p: c for (c,p) in intterms}
+
+#  print "intterms: %s" %intterms
+#  print "pow_lookup: %s" %pow_lookup
+
+#  print "degree: %d" %degree
+
+  coef_list = [pow_lookup[i] if pow_lookup.has_key(i) else 0 for i in range(degree + 1)]
+  int_coefs = map(int, coef_list)
+#  print "coef_list: %s" %coef_list
+#  print "equal: %s" %(coef_list ==  int_coefs)
+
+  # TODO think of a better way to handle non ints
+  if coef_list == int_coefs:
+    return int_coefs
+  return coef_list
 
 def convert_back(lpoly):
   return sum(

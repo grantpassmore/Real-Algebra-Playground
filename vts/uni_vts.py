@@ -197,15 +197,18 @@ def make_product_list(polies):
   #print len(acc)
   return acc
 
-def remainder(f, g):
+def signed_pseudo_remainder(f, g):
   if f == []:
     return []
-    
+
+  if g == []:
+    raise Exception("Division by zero polynomial")
+  
   lc_f = f[-1]
   lc_g = g[-1]
   
   if lc_f == 0:
-    return remainder(f[:-1], g)
+    return signed_pseudo_remainder(f[:-1], g)
     
   # can't change the sign of the remainder
   if lc_g < 0:
@@ -234,11 +237,32 @@ def remainder(f, g):
   print "type: %s" %type(coef)"""
   
   subtracted = map(lambda (c1, c2): c1*lc_g - c2*lc_f, zip(f, q_first_term_by_g))
-  return remainder(subtracted[:-1], g)
+  return signed_pseudo_remainder(subtracted[:-1], g)
+
   
+def logger(f):
+  def wrapper(*args, **kwargs):
+    global log
+#    print log
+    if log:
+      print "calling %s with args:%s, kwargs:%s" %(f.__name__, args, kwargs)
+    return f(*args, **kwargs)
+  return wrapper
+
+
 def signed_remainder_sequence(p, q):
+  """Calculates the signed remainder sequence of two polynomials
+  Uses pseudo remainder
+
+  Keyword arguments:
+  p -- first polynomial in the sequence
+  q -- second polynomial in the sequence
+
+  return -- signed remainder sequence
+  """
   # print "running"
-  rem = remainder(p, q)
+
+  rem = signed_pseudo_remainder(p, q)
   # srem = sympy.div(isym.convert_back(p), isym.convert_back(q), x)[1]
   # print (srem - isym.convert_back(rem)).expand()
   if rem == []:
@@ -249,12 +273,21 @@ def signed_remainder_sequence(p, q):
   sequence = signed_remainder_sequence(q, neg_rem)
   sequence.insert(0, p)
   return sequence
-  
+
 def signed_remainder_cauchy_index(p, q):
-  sequence = signed_remainder_sequence(p, q)
+  """Calculates the cauchy index by using signed remainder sequence
+  
+  Keyword arguments:
+  p -- p part of q / p 
+  q -- q part of q / p 
+  
+  return -- cauchy index (in interval (-inf, +inf))
+  """
     
-  # print "p: %s" %p
-  # print "q: %s" %q
+  if q == []:
+    return 0
+  
+  sequence = signed_remainder_sequence(p, q)
   
   neg_inf = map(lambda p: p[-1] * (-1)**((len(p) - 1)%2), sequence)
   pos_inf = map(lambda p: p[-1], sequence)
@@ -276,14 +309,25 @@ def signed_remainder_cauchy_index(p, q):
   
   return neg_changes - pos_changes
   
+
+log = False
 def tarski_query(p, q):
-  """Sums over q(x) on such x-s that p(x) == 0
+  """Computers the tarksi query of p, q - i.e. sums over q(x) on such x-s 
+  that p(x) == 0.
+  
+  Keyword arguments:
+  p -- polynomials at whose roots the tarksi query is inspected
+  q -- signs that are inspected in tarksi query
+
+  return tarski query value
   """
   
   # print 'tarksi query'
   p_der = derivative(p)
   # print (sympy.diff(isym.convert_back(p), sympy.var('x')) - isym.convert_back(p_der)).expand()
   
+  global log
+  log = True
   ret = signed_remainder_cauchy_index(p, multiply(p_der, q))
   
   # sp = isym.convert_back(p)
