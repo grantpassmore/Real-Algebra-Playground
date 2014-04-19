@@ -3,3 +3,4 @@ start.sh
 *.py~
 \#*\#
 start.bat
+cache/*
