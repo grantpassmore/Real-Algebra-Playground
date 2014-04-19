@@ -22,12 +22,14 @@ def read_cache(name):
     
 def load_or_create_matrix():
   # TODO remove old implementation
+  """
   print "matrix_of_signs.load_or_create_matrix is temporary broken"
   print "comment 'return None' out"
   print "this is not a bug (want to switch to faster implementation after"
   print "unittest, but don't wan't to wait on init in the meantime)"
   print
   print
+  """
   return None
   print 'loading'
 
