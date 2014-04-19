@@ -517,13 +517,17 @@ def sign_conditions_lookup(le, lt, eq, ne):
   for p in (le + lt + eq + ne):
     sign_lookup[make_poly_hashabel(p)] = {-1, 0, 1}
   for p in le:
-    sign_lookup[make_poly_hashabel(p)] = sign_lookup[make_poly_hashabel(p)].intersection({-1, 0})
+    sign_lookup[make_poly_hashabel(p)] = \
+        sign_lookup[make_poly_hashabel(p)].intersection({-1, 0})
   for p in lt:
-    sign_lookup[make_poly_hashabel(p)] = sign_lookup[make_poly_hashabel(p)].intersection({-1})
+    sign_lookup[make_poly_hashabel(p)] = \
+        sign_lookup[make_poly_hashabel(p)].intersection({-1})
   for p in eq:
-    sign_lookup[make_poly_hashabel(p)] = sign_lookup[make_poly_hashabel(p)].intersection({0})
+    sign_lookup[make_poly_hashabel(p)] = \
+        sign_lookup[make_poly_hashabel(p)].intersection({0})
   for p in ne:
-    sign_lookup[make_poly_hashabel(p)] = sign_lookup[make_poly_hashabel(p)].intersection({-1, 1})
+    sign_lookup[make_poly_hashabel(p)] = \
+        sign_lookup[make_poly_hashabel(p)].intersection({-1, 1})
   return sign_lookup
 
 def e_close_evaluate_single_on_sign_assignment(discDerSign, poly):
@@ -549,7 +553,7 @@ def e_close_evaluate_on_sign_assignment(discDerSign, all_polies, sign_lookup):
     if not sign in sign_lookup[make_poly_hashabel(poly)]:
       return False
   return True
-  
+   
 def evaluate_on_sign_assignment(discDerSign, all_polies, sign_lookup):
   for poly in all_polies:
     sign = evaluate_single_on_sign_assignment(discDerSign, poly)
@@ -602,9 +606,25 @@ class DiscDerSigns:
   def __repr__(self):
     #return '[\npoint: %s\n  <:%s\n  0:%s\n  >:%s\n]' \
     #    %(self.point, self.neg_polies, self.zer_polies, self.pos_polies)
-    return '[point: %s [<%s, =%s, >%s]]' \
-        %(self.point.decimal(), len(self.neg_polies), 
-        len(self.zer_polies), len(self.pos_polies))
+    degrees = map(lambda p: len(p), self.get_all_polies())
+    pos_degs = map(lambda p: len(p), self.pos_polies)
+    neg_degs = map(lambda p: len(p), self.neg_polies)
+    zer_degs = map(lambda p: len(p), self.zer_polies)
+
+    pos_key, zer_key, neg_key = "", "", ""
+    for next_deg in range(len(self.origin), min(degrees), -1):
+      deg = next_deg - 1
+      pos_key += "1," if deg in pos_degs else "0,"
+      neg_key += "1," if deg in neg_degs else "0,"
+      zer_key += "1," if deg in zer_degs else "0,"
+
+    pos_key = pos_key[:-1]
+    return '[point: %9s [<%s =%s >%s]]' \
+        %(self.point.decimal(), neg_key, 
+          zer_key, pos_key)
+#    return '[point: %s [<%s, =%s, >%s]]' \
+#        %(self.point.decimal(), len(self.neg_polies), 
+#        len(self.zer_polies), len(self.pos_polies))
 
 def derivative(poly):
   coef_pows = zip(poly, range(len(poly)))[1:]
@@ -643,9 +663,14 @@ def get_discri_der_signs(roots, exact_poly):
   #print "len(ret): %s" %len(ret)
   
   if not len(pos_roots) == 0:
+#    print "there are zeros"
+#    print zero_roots
     discDerSigns = get_discri_der_signs(pos_roots, der)
+#    print "der: %s" %der
+#    print "dds: %s" %discDerSigns
     if not len(pos_roots) == len(roots):
       map(lambda p: p.add_pos_poly(der), discDerSigns)
+#    print "dds: %s" %discDerSigns
     ret +=  discDerSigns
     
   #print "len(pos_roots): %s" %len(pos_roots)

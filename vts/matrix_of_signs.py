@@ -21,6 +21,7 @@ def read_cache(name):
     return pickle.load(f)
     
 def load_or_create_matrix():
+  # TODO remove old implementation
   print "matrix_of_signs.load_or_create_matrix is temporary broken"
   print "comment 'return None' out"
   print "this is not a bug (want to switch to faster implementation after"
@@ -135,6 +136,7 @@ def new_get_matrix_inverse(n):
   return inverse
 
 def get_matrix(polies_size):
+  return new_get_matrix(polies_size)
   global matrix_of_signs_lookup
   
   if polies_size in matrix_of_signs_lookup:
@@ -171,6 +173,7 @@ def load_or_create_inverse():
 matrix_of_signs_inverse_lookup = load_or_create_inverse()
 
 def get_matrix_inverse(polies_size):
+  return new_get_matrix_inverse(polies_size)
   global matrix_of_signs_inverse_lookup
   
   if polies_size in matrix_of_signs_inverse_lookup:
