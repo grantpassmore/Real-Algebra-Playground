@@ -1,3 +1,5 @@
+import fractions
+
 import z3rcf
 import sympy
 import isym # used in checking
@@ -216,14 +218,17 @@ def signed_pseudo_remainder(f, g):
     lc_g = -lc_g
     lc_f = -lc_f
   
-  lc_gcd = sympy.gcd(lc_f, lc_g)
-  print "lc_gcd: %s" %lc_gcd
+#  print "f: %s" %f
+#  print "g: %s" %g
+#  lc_gcd = sympy.gcd(lc_f, lc_g)
+#  print "lc_gcd: %s" %lc_gcd
 
   # degree is smaller
   if len(f) < len(g):
-    print f
-    gcd = reduce(sympy.gcd, f)
-    print "gcd: %s" %gcd
+#    gcd = abs(reduce(fractions.gcd, f))
+#    gcd = reduce(sympy.gcd, f)
+#    print "gcd: %s" %gcd
+#    return map(lambda c: c / gcd, f)
     return f
   
   # might be faster to create a list and then fill it
@@ -340,6 +345,7 @@ def tarski_query(p, q):
   
 
   # TODO remove this
+  """
   p_roots = z3rcf.MkRoots(p)
   values = map(lambda p: evaluate_poly(q, p), p_roots)
   calc = len(filter(lambda c: c > 0, values)) - \
@@ -352,8 +358,8 @@ def tarski_query(p, q):
     print "sq: %s" %isym.convert_back(q)
     print "ret: %s" %ret
     print "calc: %s" %calc
-    raise Exception("aa")
-
+    raise Exception("calc and ret weren't equal")
+  """
 
   """
   sp = isym.convert_back(p)
@@ -510,9 +516,6 @@ def evaluate_single_on_sign_assignment(discDerSign, goal):
   
   # multiply inverse with column
   c_matrix = M_inv * taq_column
-
-  for c in c_matrix:
-    print c
 
   # print polies
   # print "len(polies): %s" %len(polies)

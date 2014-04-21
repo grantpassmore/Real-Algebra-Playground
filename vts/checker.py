@@ -9,19 +9,21 @@ def check_examples(vts=True):
   uni_ex_files= examples_parser.unpickle_dirs_gen()
   
   results = {}
-
+  skip = {(3, 0)}
   for file_index, example_file in enumerate(uni_ex_files):
-    if file_index < 3:
+    if file_index < 0:
       continue
-    if file_index > 3:
+    if file_index > 2:
       break
     print "file nr.%d" %file_index
 
-    for index, example in enumerate(example_file):
-      if index > 0:
-        break;
-      print "using example nr.%d" %index
-
+    for ex_index, example in enumerate(example_file):
+#      if ex_index > 0:
+#        break;
+      print "using example nr.%d" %ex_index
+      if (file_index, ex_index) in skip:
+        print "skipping"
+        continue
       uni_ante, uni_succ = example
       print "antecedent len: %s" %len(uni_ante)
       print "succedent len: %s" %len(uni_succ)
