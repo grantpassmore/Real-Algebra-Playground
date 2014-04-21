@@ -107,7 +107,8 @@ def internal_vts(le, lt, eq, ne):
     
     for droot in droots:
       # print "droot: %s" %droot
-      formula_value = evaluate_on_sign_assignment(droot, all_polies, sign_lookup)
+      formula_value = evaluate_on_sign_assignment(
+          droot, all_polies, sign_lookup)
       # print "formula_value: %s" %formula_value
       if formula_value:
         return True
@@ -369,7 +370,7 @@ def pick_sign_of_goal(polies, discDerSign, c_matrix):
     # print "%d. poly: %s" %(polies.index(poly), poly)
     step = total / 3**(polies.index(poly) + 1)
     sign = discDerSign.get_sign(poly)
-    
+    # print poly
     # print "step: %s" %step
     # print "sign: %s" %sign
     total_shift += step * off_values[sign]
@@ -378,13 +379,20 @@ def pick_sign_of_goal(polies, discDerSign, c_matrix):
   
   # print "total_shift: %s" %total_shift
   
+  goal_sign = None
   for sign in off_values:
-    value = c_matrix[total_shift + off_values[sign]]
-    if value == 1:
-      return sign
-    if not value in [0, 1]:
-      raise Exception("table had a value that was neither 0 or 1 (%s)" %value)
-  raise Exception("no entry in the table was with count 1")
+    count = c_matrix[total_shift + off_values[sign]]
+    if count == 1:
+      if goal_sign != None:
+        raise Exception("multiple possible signs in matrix")
+      goal_sign =  sign
+    if not count in [0, 1]:
+      raise Exception("table had a count that was neither 0 or 1 (%s)" %count)
+  if goal_sign == None:
+    s = "\ngoal: %s\n, dds: %s" %(polies[-1], discDerSign)
+    
+    raise Exception("no entry in the table was with count 1" + s)
+  return goal_sign
   
 def sign_func(v):
   return -1 if v < 0 else 1 if v > 0 else 0
@@ -443,7 +451,7 @@ def evaluate_single_on_sign_assignment(discDerSign, goal):
   
   
   M_inv = matrix_of_signs.get_matrix_inverse(len(polies))
-  
+
   """powers = [[]]
   for s in range(len(polies)):
     acc = []
@@ -472,10 +480,12 @@ def evaluate_single_on_sign_assignment(discDerSign, goal):
     map(lambda poly: [tarski_query(discDerSign.origin, poly)], product_list)
   )
   
-  
   # multiply inverse with column
   c_matrix = M_inv * taq_column
-  
+
+  for c in c_matrix:
+    print c
+
   # print polies
   # print "len(polies): %s" %len(polies)
   # print "len(c_matrix): %s" % len(c_matrix.col(0))
@@ -619,9 +629,9 @@ class DiscDerSigns:
       zer_key += "1," if deg in zer_degs else "0,"
 
     pos_key = pos_key[:-1]
-    return '[point: %9s [<%s =%s >%s]]' \
+    return '[point: %9s [<%s =%s >%s]\n%s]' \
         %(self.point.decimal(), neg_key, 
-          zer_key, pos_key)
+          zer_key, pos_key, self.origin)
 #    return '[point: %s [<%s, =%s, >%s]]' \
 #        %(self.point.decimal(), len(self.neg_polies), 
 #        len(self.zer_polies), len(self.pos_polies))

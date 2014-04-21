@@ -11,7 +11,12 @@ class VTSTest(unittest.TestCase):
 
   def setUp(self):
     self.x = sympy.var('x')
-    pass
+    def make_dds(p):
+      rs = z3rcf.MkRoots(p)
+      dds = uni_vts.get_discri_der_signs(rs, p)
+      map(lambda d: d.set_origin_poly(p), dds)
+      return sorted(dds, key=lambda p: p.point)
+    self.make_dds = make_dds
 
   def test_remainder(self):
     data = {
@@ -211,7 +216,207 @@ class VTSTest(unittest.TestCase):
     self.assertEquals([poly_1st_der], pos_1.zer_polies)
     self.assertEquals([], pos_1.pos_polies)
     
-    
+  def test_pick_sign_of_goal(self):
+    a, b, c = sympy.var('a'), sympy.var('b'), sympy.var('c')
+    p1 = [a]
+    p2 = [b]
+    goal = [c]
 
+    # shifts 0, 1, -1
+    
+    matrix = {k: 0 for k in range(27)}
+
+    # p1 = 0, p2 = 0, goal > 0
+    matrix[9*0 + 3*0 + 1] = 1
+    dds = uni_vts.DiscDerSigns(0)
+    dds.add_zer_poly(p1)
+    dds.add_zer_poly(p2)
+    goal_sign = uni_vts.pick_sign_of_goal([p1, p2, goal], dds, matrix)
+    self.assertEquals(1, goal_sign)
+    matrix[1] = 0
+
+    # p1 = 0, p2 = 0, goal < 0
+    matrix[9*0 + 3* 0 + 2] = 1
+    dds = uni_vts.DiscDerSigns(0)
+    dds.add_zer_poly(p1)
+    dds.add_zer_poly(p2)
+    goal_sign = uni_vts.pick_sign_of_goal([p1, p2, goal], dds, matrix)
+    self.assertEquals(-1, goal_sign)
+    matrix[2] = 0
+
+    # p < 0, p2 > 0, goal = 0
+    matrix[9*2 + 3*1 + 0] = 1
+    dds = uni_vts.DiscDerSigns(0)
+    dds.add_neg_poly(p1)
+    dds.add_pos_poly(p2)
+    goal_sign = uni_vts.pick_sign_of_goal([p1, p2, goal], dds, matrix)
+    self.assertEquals(0, goal_sign)
+    
+    # 21 = 22 = 1
+    matrix[22] = 1
+    self.assertRaises(Exception, 
+        lambda: uni_vts.pick_sign_of_goal([p1, p2, goal], dds, matrix))
+    matrix[22] = 0
+
+    # nothing is zero
+    matrix[21] = 0
+    self.assertRaises(Exception, 
+        lambda: uni_vts.pick_sign_of_goal([p1, p2, goal], dds, matrix))
+
+    
+    matrix[21] = 2
+    self.assertRaises(Exception, 
+        lambda: uni_vts.pick_sign_of_goal([p1, p2, goal], dds, matrix))
+    
+  def test_evaluate_single_on_sign_assignment(self):
+    r1_poly = [-1, 0, 1]
+    dds1 = self.make_dds(r1_poly)
+
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[0], [1.1, 1]))
+    self.assertEquals(0, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[0], [1, 1]))
+    self.assertEquals(-1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[0], [0.9, 1]))
+
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[1], [-0.9, 1]))
+    self.assertEquals(0, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[1], [-1, 1]))
+    self.assertEquals(-1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[1], [-1.1, 1]))
+    
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[0], [1, 0, 1]))
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[0], [1, 0, 1]))
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[0], [1, 0, 1]))
+
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds1[0], [1, 0, 1]))
+
+    # (x - 1)**2 * x * (x + 1) * (x + 2)
+    r2_poly = [0, 2, -1, -3, 1, 1]
+    dds2 = self.make_dds(r2_poly)
+    
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[0], [2.1, 1]))
+    self.assertEquals(0, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[0], [2, 1]))
+    self.assertEquals(-1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[0], [1.9, 1]))
+
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[1], [1.1, 1]))
+    self.assertEquals(0, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[1], [1, 1]))
+    self.assertEquals(-1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[1], [0.9, 1]))
+
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[2], [0.1, 1]))
+    self.assertEquals(0, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[2], [0, 1]))
+    self.assertEquals(-1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[2], [-0.1, 1]))
+
+    # NOTE double breaks down here
+    t = sympy.S(9) / 10
+    self.assertEquals(1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[3], [-1 + t, 1]))
+    self.assertEquals(0, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[3], [-1, 1]))
+    self.assertEquals(-1, 
+        uni_vts.evaluate_single_on_sign_assignment(dds2[3], [-1 - t, 1]))
+
+  def test_e_close_evaluate_single_on_sign_assignment(self):
+    r1_poly = [-1, 0, 1]
+    dds1 = self.make_dds(r1_poly)
+    
+    data = {
+      (-1, 1): 1,
+      (1, -1): -1,
+      (-2, 1): -1,
+      (0, 1): 1,
+      (1, -2, 1): 1,
+      (-1, 2, -1): -1,
+    }
+    for p, expected_sign in data.iteritems():
+      actual = uni_vts.e_close_evaluate_single_on_sign_assignment(
+          dds1[1], list(p))
+      # print "p: %s" %list(p)
+      # print "actual: %d" %actual
+      self.assertEquals(expected_sign, actual)
+
+  def test_sign_conditions_lookup(self):
+    p1, p2, p3, p4 = map(lambda x: [sympy.var(x)] ,["p1", "p2", "p3", "p4"])
+
+    sign_lookup = uni_vts.sign_conditions_lookup([p1], [p2], [p3], [p4])
+    self.assertEquals({0, -1}, sign_lookup[uni_vts.make_poly_hashabel(p1)])
+    self.assertEquals({-1}, sign_lookup[uni_vts.make_poly_hashabel(p2)])
+    self.assertEquals({0}, sign_lookup[uni_vts.make_poly_hashabel(p3)])
+    self.assertEquals({-1, 1}, sign_lookup[uni_vts.make_poly_hashabel(p4)])
+
+    sign_lookup = uni_vts.sign_conditions_lookup([], [p1, p2], [], [])
+    self.assertEquals({-1}, sign_lookup[uni_vts.make_poly_hashabel(p1)])
+    self.assertEquals({-1}, sign_lookup[uni_vts.make_poly_hashabel(p2)])
+
+    sign_lookup = uni_vts.sign_conditions_lookup([], [], [p1, p2], [])
+    self.assertEquals({0}, sign_lookup[uni_vts.make_poly_hashabel(p1)])
+    self.assertEquals({0}, sign_lookup[uni_vts.make_poly_hashabel(p2)])
+
+    sign_lookup = uni_vts.sign_conditions_lookup([], [], [], [p1, p2])
+    self.assertEquals({-1, 1}, sign_lookup[uni_vts.make_poly_hashabel(p1)])
+    self.assertEquals({-1, 1}, sign_lookup[uni_vts.make_poly_hashabel(p2)])
+
+    sign_lookup = uni_vts.sign_conditions_lookup([p1, p2], [], [], [])
+    self.assertEquals({0, -1}, sign_lookup[uni_vts.make_poly_hashabel(p1)])
+    self.assertEquals({0, -1}, sign_lookup[uni_vts.make_poly_hashabel(p2)])
+
+  def test_vts(self):
+    lin_1 = [-1, 1]
+    lin_2 = [-2, 1]
+    cub_1 = [-1, 3, -3, 1]
+    qua_  = [1, 0, 1]
+
+    self.assertEquals(True, 
+                      uni_vts.internal_vts([lin_1], [], [lin_1], []))
+    self.assertEquals(True, 
+                      uni_vts.internal_vts([lin_1], [lin_1], [], []))
+    self.assertEquals(False, 
+                      uni_vts.internal_vts([], [], [lin_1], [lin_1]))
+    self.assertEquals(False, 
+                      uni_vts.internal_vts([], [], [lin_1, lin_2], []))
+    self.assertEquals(True, 
+                      uni_vts.internal_vts([], [], [lin_1], [lin_2]))
+
+    self.assertEquals(True,
+                      uni_vts.internal_vts([], [], [cub_1], []))
+    self.assertEquals(True,
+                      uni_vts.internal_vts([], [], [cub_1, lin_1], []))
+    self.assertEquals(False,
+                      uni_vts.internal_vts([], [], [cub_1], [lin_1]))
+
+    self.assertEquals(False,
+                      uni_vts.internal_vts([qua_], [], [], []))
+    self.assertEquals(False,
+                      uni_vts.internal_vts([], [qua_], [], []))
+    self.assertEquals(False,
+                      uni_vts.internal_vts([], [], [qua_], []))
+    self.assertEquals(True,
+                      uni_vts.internal_vts([], [], [], [qua_]))
+
+    
 if __name__ == '__main__':
   unittest.main()
+
+
+
+
+
+
+
+
+
+

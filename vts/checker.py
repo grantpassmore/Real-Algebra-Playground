@@ -6,54 +6,58 @@ import examples_parser
 import isym
 
 def check_examples(vts=True):
-  start = time.clock()
-  #uni_examples = examples_parser.examples_preformat_uni()
-  uni_examples = examples_parser.unpickle_dirs()
-  end = time.clock()
-  print (end - start)
+  uni_ex_files= examples_parser.unpickle_dirs_gen()
   
   results = {}
-  for dir in uni_examples:
-    # some slow examples are in Metitarski
-    # if not dir == 'HidingProblems':
-      # continue
-    for file in uni_examples[dir]:
-      print file
-      
-      for example in uni_examples[dir][file]: 
-        uni_ante, uni_succ = example
-        print "antecedent: %s" %uni_ante
-        print "succedent: %s" %uni_succ
-        
-        
-        formula_value = True
-        #if big_or has a clause that is true then original formula is false
-        big_or = vts_preformat(uni_ante, uni_succ)
-        for formula in big_or:
-          print "checking formula: %s" %formula
-          r_map = make_relation_map(formula)
-          
-          print "le: %s" %r_map['le']
-          print "lt: %s" %r_map['lt']
-          print "eq: %s" %r_map['eq']
-          print "ne: %s" %r_map['ne']
-          
-          if vts:
-            disj_value = \
-                isym.vts(r_map['le'], r_map['lt'], r_map['eq'], r_map['ne'])
-          else:
-            disj_value = \
-                isym.ts(r_map['le'], r_map['lt'], r_map['eq'], r_map['ne'])
-          
-                    
-          print "disj_value: %s" %disj_value
-          if disj_value:
-            formula_value = False
-        print "formula value: %s" %formula_value
-        print
-        if not formula_value:
-          results[file] = formula_value
-      # break # only first file
+
+  for file_index, example_file in enumerate(uni_ex_files):
+    if file_index < 3:
+      continue
+    if file_index > 3:
+      break
+    print "file nr.%d" %file_index
+
+    for index, example in enumerate(example_file):
+      if index > 0:
+        break;
+      print "using example nr.%d" %index
+
+      uni_ante, uni_succ = example
+      print "antecedent len: %s" %len(uni_ante)
+      print "succedent len: %s" %len(uni_succ)
+
+
+      formula_value = True
+      #if big_or has a clause that is true then original formula is false
+      big_or = vts_preformat(uni_ante, uni_succ)
+      for formula in big_or:
+        # print "checking formula: %s" %formula
+        r_map = make_relation_map(formula)
+
+        """
+        print "le: %s" %r_map['le']
+        print "lt: %s" %r_map['lt']
+        print "eq: %s" %r_map['eq']
+        print "ne: %s" %r_map['ne']
+        #"""
+#        return 
+        if vts:
+          disj_value = \
+              isym.vts(r_map['le'], r_map['lt'], r_map['eq'], r_map['ne'])
+        else:
+          disj_value = \
+              isym.ts(r_map['le'], r_map['lt'], r_map['eq'], r_map['ne'])
+
+
+        print "disj_value: %s" %disj_value
+        if disj_value:
+          formula_value = False
+      print "formula value: %s" %formula_value
+      print
+      if not formula_value:
+        results[file] = formula_value
+
+
   print results
   for f in results:
     print "%s - %s" %(f[:-8], results[f])

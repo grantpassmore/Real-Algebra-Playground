@@ -6,6 +6,7 @@ import sys
 import os
 import errno
 import pickle
+import itertools
 
 import sympy
 
@@ -87,6 +88,33 @@ def make_univariate(relations):
     acc.append(cls(new_lhs, 0))
   return acc
 
+def unpickle_dirs_gen():
+  base_dir = os.path.join('Examples')
+  met_dir = os.path.join(base_dir, 'MetiTarski')
+  hid_dir = os.path.join(base_dir, 'HidingProblems')
+
+  dirGen = itertools.chain( os.walk(met_dir), os.walk(hid_dir))
+
+  all_names = []
+  for dirpath, dirnames, filenames in dirGen:
+    all_names += map(lambda s: os.path.join(dirpath, s), filenames)
+
+  def unpickle_file(filename):
+    with open(filename, 'rb') as f:
+      shorter = os.path.basename(filename)
+#      print 
+      sys.stdout.write("parsing %s" %shorter)
+      sys.stdout.flush()
+
+
+      content = pickle.load(f)
+
+      sys.stdout.write("\rdone parsing %s\n" %shorter)
+      sys.stdout.flush()
+      return content
+
+  return itertools.imap(unpickle_file, all_names)
+
 def unpickle_dirs():
   """Loads python objects from "./Examples" directory
   
@@ -128,7 +156,6 @@ def unpickle_from_dir(dir):
         ret[filename] = content
       # break
   return ret  
-
   
 def parse_example_dirs():
   """Parses examples in ../GRF/Examples/Metitarski and 

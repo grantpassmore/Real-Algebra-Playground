@@ -21,7 +21,7 @@ def convert(poly):
 
   symbols = poly.free_symbols
   if len(symbols) == 0:
-    return [poly]
+    return convert_rationals_to_ints([poly])
 
   poly = poly.expand()
 
@@ -42,16 +42,44 @@ def convert(poly):
 
 #  print "degree: %d" %degree
 
-  coef_list = [pow_lookup[i] if pow_lookup.has_key(i) else 0 for i in range(degree + 1)]
-  int_coefs = map(int, coef_list)
+  coef_list = [pow_lookup[i] if pow_lookup.has_key(i) else 0 
+               for i in range(degree + 1)]
 #  print "coef_list: %s" %coef_list
 #  print "equal: %s" %(coef_list ==  int_coefs)
 
   # TODO think of a better way to handle non ints
-  if coef_list == int_coefs:
-    return int_coefs
-  return coef_list
+  return convert_rationals_to_ints(coef_list)
 
+def convert_rationals_to_ints(coef_list):
+  ints = filter(lambda c: isinstance(c, int), coef_list)
+  rationals = filter(lambda c: isinstance(c, sympy.Rational), coef_list)
+  if len(ints) + len(rationals) > len(coef_list):
+    raise Exception("int's and rationals are not mutually exclusive")
+
+  lcm = reduce(lambda x, y: sympy.lcm(x, y.q), rationals, 1)
+  
+  no_rationals = map(lambda x: x * lcm, coef_list)
+  
+  int_coefs = [int(x) if isinstance(x, sympy.Integer) else x 
+               for x in no_rationals]
+
+
+
+
+  if len(rationals) + len(ints) != len(coef_list):
+#    print "not equal"
+    print "coef_list: %s" %coef_list
+    print "rationals: %s" %rationals  
+    print "lcm: %s" %lcm
+    print "int_coefs: %s" %int_coefs
+    print "types: %s" %map(type, int_coefs)
+
+    raise Exception("not rational")
+    pass
+
+  
+  return int_coefs
+  
 def convert_back(lpoly):
   return sum(
     map(
@@ -91,12 +119,13 @@ def ts(le, lt, eq, ne):
   #return uni_vts.internal_ts(map(convert, eq), map(convert, lt))
   
 def vts(le, lt, eq, ne):
+
   converted_le = map(convert, le)
   converted_lt = map(convert, lt)
   converted_eq = map(convert, eq)
   converted_ne = map(convert, ne)
   
-  print uni_vts.internal_vts(converted_le, converted_lt, \
+  return  uni_vts.internal_vts(converted_le, converted_lt, \
       converted_eq, converted_ne)
   
   

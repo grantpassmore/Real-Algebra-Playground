@@ -12,5 +12,9 @@ if __name__ == "__main__":
   suite3 = unittest.TestLoader().loadTestsFromTestCase( \
       test_isym.TestIsym)
 
-  suite = unittest.TestSuite([suite1, suite2, suite3])
+  suite = unittest.TestSuite([
+      suite1, 
+      suite2, 
+      suite3,
+  ])
   unittest.TextTestRunner(verbosity = 2).run(suite)
