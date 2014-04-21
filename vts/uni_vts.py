@@ -216,7 +216,14 @@ def signed_pseudo_remainder(f, g):
     lc_g = -lc_g
     lc_f = -lc_f
   
+  lc_gcd = sympy.gcd(lc_f, lc_g)
+  print "lc_gcd: %s" %lc_gcd
+
+  # degree is smaller
   if len(f) < len(g):
+    print f
+    gcd = reduce(sympy.gcd, f)
+    print "gcd: %s" %gcd
     return f
   
   # might be faster to create a list and then fill it
@@ -331,29 +338,50 @@ def tarski_query(p, q):
   log = True
   ret = signed_remainder_cauchy_index(p, multiply(p_der, q))
   
-  # sp = isym.convert_back(p)
-  # sq = isym.convert_back(q)
-  # rs = sympy.solve(sp, sympy.var('x'))
-  # sum = 0
-  # for r in rs:
-    # sum += sympy.sign( sq.subs([(sympy.var('x'), r)]) )
+
+  # TODO remove this
+  p_roots = z3rcf.MkRoots(p)
+  values = map(lambda p: evaluate_poly(q, p), p_roots)
+  calc = len(filter(lambda c: c > 0, values)) - \
+         len(filter(lambda c: c < 0, values))
+
+  if calc != ret:
+    print "p: %s" %p
+    print "q: %s" %q
+    print "sp: %s" %isym.convert_back(p)
+    print "sq: %s" %isym.convert_back(q)
+    print "ret: %s" %ret
+    print "calc: %s" %calc
+    raise Exception("aa")
+
+
+  """
+  sp = isym.convert_back(p)
+  sq = isym.convert_back(q)
+
+  print "sp: %s" %sp
+  print "sq: %s" %sq
+  rs = sympy.solve(sp, sympy.var('x'))
+  sum = 0
+  for r in rs:
+    sum += sympy.sign( sq.subs([(sympy.var('x'), r)]) )
   
   # #test this
   # #[24, -50, 35, -10, 1], [-50, 170, -220, 134, -38, 4]
   
-  # # print "ret: %s" %ret
-  # # print "sum: %s" %sum
-  # print "dif: %s" %(ret - sum)
-  # if ret != sum:
-    # print "rs: %s" %rs
-    # print "got: %s" %ret
-    # print "actual: %s" %sum
-    # print sp
-    # print sq
-    # print
+  print "ret: %s" %ret
+  print "sum: %s" %sum
+  print "dif: %s" %(ret - sum)
+  if ret != sum:
+    print "rs: %s" %rs
+    print "got: %s" %ret
+    print "actual: %s" %sum
+    print sp
+    print sq
+    print
     
-    # raise Exception("different sums: ")
-  
+    raise Exception("different sums: ")
+  """
   return ret
 
 def pick_sign_of_goal(polies, discDerSign, c_matrix):
