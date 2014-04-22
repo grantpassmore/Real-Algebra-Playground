@@ -225,10 +225,10 @@ def signed_pseudo_remainder(f, g):
 
   # degree is smaller
   if len(f) < len(g):
-#    gcd = abs(reduce(fractions.gcd, f))
+    gcd = abs(reduce(fractions.gcd, f))
 #    gcd = reduce(sympy.gcd, f)
-#    print "gcd: %s" %gcd
-#    return map(lambda c: c / gcd, f)
+    print "gcd: %s" %gcd
+    return map(lambda c: c / gcd, f)
     return f
   
   # might be faster to create a list and then fill it
@@ -301,7 +301,12 @@ def signed_remainder_cauchy_index(p, q):
     return 0
   
   sequence = signed_remainder_sequence(p, q)
-  
+
+  print "sequence:"
+  for p in sequence:
+    print p
+  print "end"
+
   neg_inf = map(lambda p: p[-1] * (-1)**((len(p) - 1)%2), sequence)
   pos_inf = map(lambda p: p[-1], sequence)
   
@@ -345,7 +350,7 @@ def tarski_query(p, q):
   
 
   # TODO remove this
-  """
+  
   p_roots = z3rcf.MkRoots(p)
   values = map(lambda p: evaluate_poly(q, p), p_roots)
   calc = len(filter(lambda c: c > 0, values)) - \
@@ -359,7 +364,7 @@ def tarski_query(p, q):
     print "ret: %s" %ret
     print "calc: %s" %calc
     raise Exception("calc and ret weren't equal")
-  """
+  
 
   """
   sp = isym.convert_back(p)
