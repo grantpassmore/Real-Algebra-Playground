@@ -18,50 +18,6 @@ class VTSTest(unittest.TestCase):
       return sorted(dds, key=lambda p: p.point)
     self.make_dds = make_dds
 
-  def test_remainder(self):
-    data = {
-      # divide by constant
-      (( 1, 1), ( 1,)):[],
-      (( 1, 2), ( 1,)):[],
-      (( 1, 1), (-1,)):[],
-      ((-2, 1), (-1,)):[],
-      (( 1, 1), (-2,)):[],
-      (( 2, 2), (-2,)):[],
-      # divide by variable
-      (( 1, 1), (0, 1)):[ 1],
-      ((-1, 2), (0, 1)):[-1],
-      ((-2, 1), (0, 1)):[-2],
-      (( 1, 1), (0,-1)):[ 1],
-      ((-1, 2), (0,-1)):[-1],
-      ((-2, 1), (0,-1)):[-2],
-      (( 1, 1), (0,-2)):[ 2],
-      ((-1, 2), (0,-2)):[-2],
-      ((-2, 1), (0,-2)):[-4],
-      #divide by ax + b
-      (( 1, 1), ( 1, 1)):[  ],
-      ((-1, 2), (-1, 1)):[ 1],
-      ((-2, 1), (-4, 1)):[ 2],
-      (( 1, 1), ( 1,-1)):[ 2],
-      ((-1, 2), (-1,-1)):[-3],
-      ((-2, 1), (-4,-1)):[-6],
-      (( 1, 1), ( 1,-2)):[ 3],
-      ((-1, 2), (-1,-2)):[-4],
-      ((-2, 1), (-4,-2)):[-8],
-      # more than one division
-      ((1, 4, 6), (0, -2)): [4],
-      # bigger
-      ((1, 1), (2, 2, 2)): [1,1],
-    }
-    for k, v in data.iteritems():
-      f = list(k[0])
-      g = list(k[1])
-      rem = uni_vts.signed_pseudo_remainder(f, g)
-#      print "f: %s" %f
-#      print "g: %s" %g
-#      print "rem: %s" %rem
-#      print "exp: %s" %v
-      self.assertEquals(v, rem)
-
   def test_signed_remainder_sequence(self):
     p, q = [24, -50, 35, -10, 1], [-50, 170, -220, 134, -38, 4]
     sequence = uni_vts.signed_remainder_sequence(p, q)
@@ -301,25 +257,25 @@ class VTSTest(unittest.TestCase):
     dds2 = self.make_dds(r2_poly)
     
     self.assertEquals(1, 
-        uni_vts.evaluate_single_on_sign_assignment(dds2[0], [2.1, 1]))
+        uni_vts.evaluate_single_on_sign_assignment(dds2[0], [21, 10]))
     self.assertEquals(0, 
         uni_vts.evaluate_single_on_sign_assignment(dds2[0], [2, 1]))
     self.assertEquals(-1, 
-        uni_vts.evaluate_single_on_sign_assignment(dds2[0], [1.9, 1]))
+        uni_vts.evaluate_single_on_sign_assignment(dds2[0], [19, 10]))
 
     self.assertEquals(1, 
-        uni_vts.evaluate_single_on_sign_assignment(dds2[1], [1.1, 1]))
+        uni_vts.evaluate_single_on_sign_assignment(dds2[1], [11, 10]))
     self.assertEquals(0, 
         uni_vts.evaluate_single_on_sign_assignment(dds2[1], [1, 1]))
     self.assertEquals(-1, 
-        uni_vts.evaluate_single_on_sign_assignment(dds2[1], [0.9, 1]))
+        uni_vts.evaluate_single_on_sign_assignment(dds2[1], [9, 10]))
 
     self.assertEquals(1, 
-        uni_vts.evaluate_single_on_sign_assignment(dds2[2], [0.1, 1]))
+        uni_vts.evaluate_single_on_sign_assignment(dds2[2], [1, 10]))
     self.assertEquals(0, 
         uni_vts.evaluate_single_on_sign_assignment(dds2[2], [0, 1]))
     self.assertEquals(-1, 
-        uni_vts.evaluate_single_on_sign_assignment(dds2[2], [-0.1, 1]))
+        uni_vts.evaluate_single_on_sign_assignment(dds2[2], [-1, 10]))
 
     # NOTE double breaks down here
     t = sympy.S(9) / 10

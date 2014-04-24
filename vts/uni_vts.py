@@ -4,8 +4,8 @@ import z3rcf
 import sympy
 import isym # used in checking
 
-
 import matrix_of_signs
+import utils
 
 class ConditionExc(Exception):
   def __init__(self, root, poly, value):
@@ -132,40 +132,13 @@ def internal_vts(le, lt, eq, ne):
     # print poly
     # print sign
     # print sign_lookup[make_poly_hashabel(poly)]
-    sign = sign_func(poly[-1] * (-1)**((len(poly) - 1)%2))
+    sign = utils.sign(poly[-1] * (-1)**((len(poly) - 1)%2))
     if not sign in sign_lookup[make_poly_hashabel(poly)]:
       return False
   
   return True
   
 
-def multiply(poly1, poly2):
-  #print "poly1: %s" %poly1
-  #print "poly2: %s" %poly2
-  ret = []
-  for power in range(len(poly1) + len(poly2) - 1):
-    sum = 0
-    #print "p_p: %s" %power
-    for p1_power in range(len(poly1)):
-      # contineu p1 power is too small
-      if p1_power + len(poly2) <= power:
-        continue
-      # break p1 power is too big
-      if p1_power > power:
-        break
-      #print "  p1_p: %s" %p1_power
-      for p2_power in range(len(poly2)):
-        # p2 power is too big given p1 power
-        if p1_power + p2_power > power:
-          break
-        # try next value
-        if p1_power + p2_power != power:
-          continue
-          
-        # in here p1_power + p2_power = power
-        sum += poly1[p1_power] * poly2[p2_power]
-    ret.append(sum)
-  return ret
   
 def make_product_list(polies):
   """Makes the list of products such that if polies = [p1, p2, p3]
@@ -176,7 +149,7 @@ def make_product_list(polies):
     return [[1]]
   
   head = polies[0]
-  square = multiply(head, head)
+  square = utils.multiply(head, head)
   rest = polies[1:]
   
   #print head
@@ -192,66 +165,13 @@ def make_product_list(polies):
         acc.append(product)
         continue
       if power == 1:
-        acc.append(multiply(product, head))
+        acc.append(utils.multiply(product, head))
         continue
       if power == 2:
-        acc.append(multiply(product, square))
+        acc.append(utils.multiply(product, square))
         continue
   #print len(acc)
   return acc
-
-def signed_pseudo_remainder(f, g):
-  if f == []:
-    return []
-
-  if g == []:
-    raise Exception("Division by zero polynomial")
-  
-  lc_f = f[-1]
-  lc_g = g[-1]
-  
-  if lc_f == 0:
-    return signed_pseudo_remainder(f[:-1], g)
-    
-  # can't change the sign of the remainder
-  if lc_g < 0:
-    lc_g = -lc_g
-    lc_f = -lc_f
-  
-#  print "f: %s" %f
-#  print "g: %s" %g
-#  lc_gcd = sympy.gcd(lc_f, lc_g)
-#  print "lc_gcd: %s" %lc_gcd
-
-  # degree is smaller
-  if len(f) < len(g):
-    gcd = abs(reduce(fractions.gcd, f))
-#    gcd = reduce(sympy.gcd, f)
-    print "gcd: %s" %gcd
-    return map(lambda c: c / gcd, f)
-    return f
-  
-  # might be faster to create a list and then fill it
-  padding = [0] * (len(f) - len(g))
-  
-  # TODO again ask about precision
-  # if isinstance(lc_f, int) and isinstance(lc_g, int):
-    # coef = lc_f / float(lc_g)
-  # else:
-    # coef = lc_f / lc_g
-    
-  q_first_term_by_g = padding + map(lambda p: p, g)
-  
-  """print "f: %s" %f
-  print "g: %s" %g
-  print "lc_f: %s" %lc_f
-  print "lc_g: %s" %lc_g
-  print "coef: %s" %coef
-  print "type: %s" %type(coef)"""
-  
-  subtracted = map(lambda (c1, c2): c1*lc_g - c2*lc_f, zip(f, q_first_term_by_g))
-  return signed_pseudo_remainder(subtracted[:-1], g)
-
   
 def logger(f):
   def wrapper(*args, **kwargs):
@@ -275,7 +195,7 @@ def signed_remainder_sequence(p, q):
   """
   # print "running"
 
-  rem = signed_pseudo_remainder(p, q)
+  rem = utils.signed_prem(p, q)
   # srem = sympy.div(isym.convert_back(p), isym.convert_back(q), x)[1]
   # print (srem - isym.convert_back(rem)).expand()
   if rem == []:
@@ -302,10 +222,12 @@ def signed_remainder_cauchy_index(p, q):
   
   sequence = signed_remainder_sequence(p, q)
 
+  """
   print "sequence:"
   for p in sequence:
     print p
   print "end"
+  """
 
   neg_inf = map(lambda p: p[-1] * (-1)**((len(p) - 1)%2), sequence)
   pos_inf = map(lambda p: p[-1], sequence)
@@ -341,18 +263,18 @@ def tarski_query(p, q):
   """
   
   # print 'tarksi query'
-  p_der = derivative(p)
+  p_der = utils.der(p)
   # print (sympy.diff(isym.convert_back(p), sympy.var('x')) - isym.convert_back(p_der)).expand()
   
   global log
   log = True
-  ret = signed_remainder_cauchy_index(p, multiply(p_der, q))
+  ret = signed_remainder_cauchy_index(p, utils.multiply(p_der, q))
   
 
   # TODO remove this
   
   p_roots = z3rcf.MkRoots(p)
-  values = map(lambda p: evaluate_poly(q, p), p_roots)
+  values = map(lambda p: utils.eval_poly(q, p), p_roots)
   calc = len(filter(lambda c: c > 0, values)) - \
          len(filter(lambda c: c < 0, values))
 
@@ -365,34 +287,6 @@ def tarski_query(p, q):
     print "calc: %s" %calc
     raise Exception("calc and ret weren't equal")
   
-
-  """
-  sp = isym.convert_back(p)
-  sq = isym.convert_back(q)
-
-  print "sp: %s" %sp
-  print "sq: %s" %sq
-  rs = sympy.solve(sp, sympy.var('x'))
-  sum = 0
-  for r in rs:
-    sum += sympy.sign( sq.subs([(sympy.var('x'), r)]) )
-  
-  # #test this
-  # #[24, -50, 35, -10, 1], [-50, 170, -220, 134, -38, 4]
-  
-  print "ret: %s" %ret
-  print "sum: %s" %sum
-  print "dif: %s" %(ret - sum)
-  if ret != sum:
-    print "rs: %s" %rs
-    print "got: %s" %ret
-    print "actual: %s" %sum
-    print sp
-    print sq
-    print
-    
-    raise Exception("different sums: ")
-  """
   return ret
 
 def pick_sign_of_goal(polies, discDerSign, c_matrix):
@@ -432,9 +326,6 @@ def pick_sign_of_goal(polies, discDerSign, c_matrix):
     
     raise Exception("no entry in the table was with count 1" + s)
   return goal_sign
-  
-def sign_func(v):
-  return -1 if v < 0 else 1 if v > 0 else 0
 
 def get_sign_by_direct_calc(polies, discDerSign):
   rs = z3rcf.MkRoots(discDerSign.origin)
@@ -443,12 +334,12 @@ def get_sign_by_direct_calc(polies, discDerSign):
   for r in rs:
     good = True
     for poly in polies[:-1]:
-      p_sign = sign_func(evaluate_poly(poly, r))
+      p_sign = utils.sign(utils.eval_poly(poly, r))
       if p_sign != discDerSign.get_sign(poly):
         good = False
         break
     if good:
-      good_values.append(sign_func(evaluate_poly(polies[-1], r)))
+      good_values.append(utils.sign(utils.eval_poly(polies[-1], r)))
       
   # must be impossible
   if len(good_values) != 1:
@@ -584,7 +475,7 @@ def e_close_evaluate_single_on_sign_assignment(discDerSign, poly):
     # print "current: %s" %current
     return current
   return e_close_evaluate_single_on_sign_assignment(
-      discDerSign, derivative(poly)
+      discDerSign, utils.der(poly)
   )
   
 def e_close_evaluate_on_sign_assignment(discDerSign, all_polies, sign_lookup):
@@ -671,10 +562,6 @@ class DiscDerSigns:
 #    return '[point: %s [<%s, =%s, >%s]]' \
 #        %(self.point.decimal(), len(self.neg_polies), 
 #        len(self.zer_polies), len(self.pos_polies))
-
-def derivative(poly):
-  coef_pows = zip(poly, range(len(poly)))[1:]
-  return map(lambda (c, p): c*p, coef_pows)
     
 def get_discri_der_signs(roots, exact_poly):
   if len(roots) == 0:
@@ -682,11 +569,11 @@ def get_discri_der_signs(roots, exact_poly):
   if len(roots) == 1:
     return [DiscDerSigns(roots[0])]
   
-  der = derivative(exact_poly)
+  der = utils.der(exact_poly)
   
   zero_roots, pos_roots, neg_roots = ([], [], [])
   for root in roots:
-    der_value = evaluate_poly(der, root)
+    der_value = utils.eval_poly(der, root)
     
     # TODO ask Grant if library supports this kind of sieve
     if der_value > 0:
@@ -758,9 +645,6 @@ def evaluate(root, eq, lt):
     if not strategy.condition(sum):
       raise ConditionExc(root, poly, strategy.msg)
 
-def evaluate_poly(poly, point):
-  terms = zip(poly, range(len(poly)))
-  return reduce(lambda s, (c, p): s + c*point**p, terms, 0)
 
 def evaluate(point, le, lt, eq, ne):
   """Evaluate relations on specific point
@@ -782,7 +666,7 @@ def evaluate(point, le, lt, eq, ne):
       
   for (poly, strategy) in r_str:
     #print "  poly: %s" %poly
-    evaluate_poly(poly, point)
+    utils.eval_poly(poly, point)
     #print "  term values: %s" %map(lambda (c, p): c*point**p, terms)
     #print "  sum: %s" %sum
     if not strategy.condition(sum):
