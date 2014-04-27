@@ -6,7 +6,8 @@ def convert(poly):
   corresponds to ith power in the polynomial, 
   list is of length degree(poly) + 1.
   When coefficients can be cast to int such that c == int(c), 
-  then list of int is returned. 0 is converted to []
+  then list of int is returned. 0 is converted to [].
+  Polynomial involving rationals is transformed to polynomial involving ints
   
   Keyword arguments:
   poly -- polynomial to be converted (univariate)
@@ -51,6 +52,17 @@ def convert(poly):
   return convert_rationals_to_ints(coef_list)
 
 def convert_rationals_to_ints(coef_list):
+  """Converts a polynomial involving rationals to polynomial involving integers.
+  
+  Keyword arguments:
+  
+  coef_list -- list of polynomial coefficients
+  
+  return -- list of polynomial coefficients s.t. if polynomial was with rational
+  coefficients then they are converted to integers.
+  
+  @throws Exception if polynomial is not with int or rational coefficients.
+  """
   ints = filter(lambda c: isinstance(c, int), coef_list)
   rationals = filter(lambda c: isinstance(c, sympy.Rational), coef_list)
   if len(ints) + len(rationals) > len(coef_list):
@@ -75,23 +87,25 @@ def convert_rationals_to_ints(coef_list):
     print "types: %s" %map(type, int_coefs)
 
     raise Exception("not rational")
-    pass
-
   
   return int_coefs
   
 def convert_back(lpoly):
+  """Converts a polynomial from coefficients list representation to sympy
+  representation
+  
+  Keyword arguments:
+  lpoly -- polynomial represented as a list of coefficients
+  
+  return -- sympy polynomial
+  """
   return sum(
     map(
       lambda (c, p): c*sympy.var('x')**p, 
       zip(lpoly, range(len(lpoly))))
   )
   
-
-def ts(eq, lt):
-  return uni_vts.internal_ts(map(convert, eq), map(convert, lt))
-
-
+  
 def ts(le, lt, eq, ne):
   """Determines the satisfiability of the constraints by term substitution.
   
@@ -119,7 +133,17 @@ def ts(le, lt, eq, ne):
   #return uni_vts.internal_ts(map(convert, eq), map(convert, lt))
   
 def vts(le, lt, eq, ne):
-
+  """Determines the satisfiability of the constraints by virtual term 
+  substitution.
+  
+  Keyword arguments:
+  le -- polynomials that are <= 0 (sympy format, univariate)
+  lt -- polynomials that are < 0 (sympy format, univariate)
+  eq -- polynomials that are = 0 (sympy format, univariate)
+  ne -- polynomials that are != 0 (sympy format, univariate)
+  
+  return boolean corresponding to satisfiability of constraints
+  """
   converted_le = map(convert, le)
   converted_lt = map(convert, lt)
   converted_eq = map(convert, eq)
@@ -127,5 +151,3 @@ def vts(le, lt, eq, ne):
   
   return  uni_vts.internal_vts(converted_le, converted_lt, \
       converted_eq, converted_ne)
-  
-  

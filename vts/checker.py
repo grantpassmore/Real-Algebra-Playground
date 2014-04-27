@@ -5,29 +5,37 @@ import sympy
 import examples_parser
 import isym
 
+import prog_printer as prog
+
 def check_examples(vts=True):
   uni_ex_files= examples_parser.unpickle_dirs_gen()
-  
-  results = {}
-  skip = {(3, 0)}
-  for file_index, example_file in enumerate(uni_ex_files):
-    if file_index < 0:
-      continue
-    if file_index > 2:
-      break
-    print "file nr.%d" %file_index
 
+  prog.reset()
+  skip = {(3, 0)}
+  skip = {}
+  
+  for file_index, example_file in enumerate(uni_ex_files):
+    prog.p("file nr.%d" %file_index)
+    if file_index < 1:
+      continue
+    if file_index > 1:
+      break
+    prog.inc()
     for ex_index, example in enumerate(example_file):
-#      if ex_index > 0:
-#        break;
-      print "using example nr.%d" %ex_index
+      if ex_index < 0:
+        continue
+      if ex_index > 99:
+        break;
+      prog.p("using example nr.%d" %ex_index)
+      
       if (file_index, ex_index) in skip:
-        print "skipping"
+        prog.p("skipping")
         continue
       uni_ante, uni_succ = example
-      print "antecedent len: %s" %len(uni_ante)
-      print "succedent len: %s" %len(uni_succ)
 
+      prog.p("antecedent len: %s" %len(uni_ante))
+      prog.p("succedent len: %s" %len(uni_succ))
+      prog.inc()
 
       formula_value = True
       #if big_or has a clause that is true then original formula is false
@@ -51,19 +59,13 @@ def check_examples(vts=True):
               isym.ts(r_map['le'], r_map['lt'], r_map['eq'], r_map['ne'])
 
 
-        print "disj_value: %s" %disj_value
+        prog.p("disj_value: %s" %disj_value)
         if disj_value:
           formula_value = False
-      print "formula value: %s" %formula_value
-      print
-      if not formula_value:
-        results[file] = formula_value
+      prog.p("formula value: %s" %formula_value)
+      prog.dec()
+    prog.dec()
 
-
-  print results
-  for f in results:
-    print "%s - %s" %(f[:-8], results[f])
-  
 def make_relation_map(formula):
   """Distributes relations in formula to map based on their type (<=, <, =, !=)
   
