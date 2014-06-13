@@ -225,10 +225,10 @@ def signed_pseudo_remainder(f, g):
 
   # degree is smaller
   if len(f) < len(g):
-    gcd = abs(reduce(fractions.gcd, f))
+#    gcd = abs(reduce(fractions.gcd, f))
 #    gcd = reduce(sympy.gcd, f)
-    print "gcd: %s" %gcd
-    return map(lambda c: c / gcd, f)
+#    print "gcd: %s" %gcd
+#    return map(lambda c: c / gcd, f)
     return f
   
   # might be faster to create a list and then fill it
@@ -302,10 +302,12 @@ def signed_remainder_cauchy_index(p, q):
   
   sequence = signed_remainder_sequence(p, q)
 
+  """
   print "sequence:"
   for p in sequence:
     print p
   print "end"
+  """
 
   neg_inf = map(lambda p: p[-1] * (-1)**((len(p) - 1)%2), sequence)
   pos_inf = map(lambda p: p[-1], sequence)
@@ -316,8 +318,12 @@ def signed_remainder_cauchy_index(p, q):
   # print "neg_inf: %s" %neg_inf
   # print "pos_inf: %s" %pos_inf
   
+  
   f_neg_inf = filter(lambda c: c != 0, neg_inf)
   f_pos_inf = filter(lambda c: c != 0, pos_inf)
+
+  # print "seq_neg_signs: %s" %map(lambda p: -1 if p < 0 else 1, neg_inf)
+  # print "seq_pos_signs: %s" %map(lambda p: -1 if p < 0 else 1, pos_inf)
   
   neg_jumps = map(lambda (p, n): p*n, zip(f_neg_inf[:-1], f_neg_inf[1:]))
   neg_changes = len(filter(lambda c: c < 0, neg_jumps))
@@ -352,7 +358,10 @@ def tarski_query(p, q):
   # TODO remove this
   
   p_roots = z3rcf.MkRoots(p)
-  values = map(lambda p: evaluate_poly(q, p), p_roots)
+  values = map(lambda r: evaluate_poly(q, r), p_roots)
+  # print "values: %s" %map(sign_func, values)
+  # print "zeros: %s" %map(lambda r: evaluate_poly(p, r), p_roots)
+  # print "roots: %s" %map(lambda r: r.decimal(20), p_roots)
   calc = len(filter(lambda c: c > 0, values)) - \
          len(filter(lambda c: c < 0, values))
 
@@ -759,6 +768,7 @@ def evaluate(root, eq, lt):
       raise ConditionExc(root, poly, strategy.msg)
 
 def evaluate_poly(poly, point):
+#  print "evaluating %s at\n%s" %(poly, point.decimal())
   terms = zip(poly, range(len(poly)))
   return reduce(lambda s, (c, p): s + c*point**p, terms, 0)
 
