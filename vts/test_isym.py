@@ -26,7 +26,7 @@ class TestIsym(unittest.TestCase):
     
     data = {
         (q(1,1), q(2,1)): [int, int],
-        (1, sympy.Float(2.2)): [int, sympy.Float]
+#        (1, sympy.Float(2.2)): [int, sympy.Float]
     }
     for coef_list, expected in data.iteritems():
       converted = isym.convert_rationals_to_ints(list(coef_list))
